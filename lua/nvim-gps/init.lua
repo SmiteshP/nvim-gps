@@ -13,6 +13,17 @@ local config = {
 }
 
 local query = {
+	["c"] = [[
+		; Struct
+		((struct_specifier
+			name: (type_identifier) @class-name
+				body: (field_declaration_list)) @scope-root)
+
+		; Function
+		((function_definition
+			declarator: (function_declarator
+				declarator: (identifier) @function-name )) @scope-root)
+	]],
 	["cpp"] = [[
 		; Namespace
 		((class_specifier
@@ -27,12 +38,12 @@ local query = {
 		((namespace_definition
 			name: (identifier) @class-name) @scope-root)
 
-		; Functions
+		; Function
 		((function_definition
 			declarator: (function_declarator
 				declarator: (identifier) @function-name)) @scope-root)
 
-		; Lambda functions
+		; Lambda function
 		((declaration
 			declarator: (init_declarator
 				declarator: (identifier) @function-name
@@ -48,6 +59,27 @@ local query = {
 			declarator: (function_declarator
 				declarator: (scoped_identifier
 					name: (identifier) @method-name))) @scope-root)
+	]],
+	["java"] = [[
+		; Class
+		((class_declaration
+			name: (identifier) @class-name
+				body: (class_body)) @scope-root)
+
+		; Interface
+		((interface_declaration
+			name: (identifier) @class-name
+				body: (interface_body)) @scope-root)
+
+		; Enum
+		((enum_declaration
+			name: (identifier) @class-name
+				body: (enum_body)) @scope-root)
+
+		; Method
+		((method_declaration
+			name: (identifier) @method-name
+				body: (block)) @scope-root)
 	]],
 	["python"] = [[
 		; Class
