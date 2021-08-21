@@ -51,17 +51,20 @@ local query = {
 					name: (identifier) @method-name))) @scope-root)
 	]],
 	["python"] = [[
+		; Class
 		((class_definition
 			name: (identifier) @class-name) @scope-root)
+
+		; Function
 		((function_definition
 			name: (identifier) @function-name) @scope-root)
+
+		; Main
+		((if_statement
+			condition: (comparison_operator
+				(string) @function-name (#match? @function-name "__main__") )) @scope-root)
 	]]
 }
--- FIXME: python main query not working
--- ((if_statement
--- 	condition: (comparison_operator
--- 		(string) @function-name (#match? @function-name "__main__") )) @scope-root)
-
 -- FIXME: python method query not working
 -- ((class_definition
 -- 	body: (block
@@ -71,6 +74,15 @@ local query = {
 
 function M.is_available()
 	return parsers.has_parser() and query[vim.bo.filetype] ~= nil
+end
+
+local cache_value = ""
+local gps_query = nil
+local bufnr = 0
+
+function M.update_query()
+	gps_query = vim.treesitter.get_query(vim.bo.filetype, "nvimGPS")
+	bufnr = vim.fn.bufnr()
 end
 
 function M.setup(user_config)
@@ -87,17 +99,25 @@ function M.setup(user_config)
 	for k, v in pairs(query) do
 		vim.treesitter.set_query(k, "nvimGPS", v)
 	end
+	vim.cmd[[
+		augroup nvimGPS
+		autocmd!
+		autocmd BufEnter * silent! lua require("nvim-gps").update_query()
+		autocmd InsertLeave * silent! lua require("nvim-gps").update_query()
+		augroup END
+	]]
 end
 
-local cache_value = ""
-
-function M.get_context()
+function M.get_location()
 	-- Inserting text cause error nodes
 	if vim.fn.mode() == 'i' then
 		return cache_value
 	end
 
-	local gps_query = vim.treesitter.get_query(vim.bo.filetype, "nvimGPS")
+	if not gps_query then
+		return "error"
+	end
+
 	local current_node = ts_utils.get_node_at_cursor()
 	local icons = config.icons
 
@@ -107,7 +127,7 @@ function M.get_context()
 	-- local temp = {} -- Debug
 	while node do
 		-- table.insert(temp, 1, node:type()) -- Debug
-		local iter = gps_query:iter_captures(node)
+		local iter = gps_query:iter_captures(node, bufnr)
 		local capture_ID, capture_node = iter()
 		-- if capture_node then table.insert(temp, 1, node:type().."/"..gps_query.captures[capture_ID].."/"..capture_node:type()) else table.insert(temp, 1, node:type()) end -- Debug
 		if capture_node == node and gps_query.captures[capture_ID] == "scope-root" then
