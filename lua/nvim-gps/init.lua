@@ -10,73 +10,89 @@ local config = {
 		["function-name"] = ' ',
 		["method-name"] = ' '
 	},
-	query = {
-		["cpp"] = [[
-			; Namespace
-			((class_specifier
-				name: (type_identifier) @class-name
-				body: (field_declaration_list)) @scope-root)
-
-			; Struct
-			((struct_specifier
-				name: (type_identifier) @class-name) @scope-root)
-
-			; Class
-			((namespace_definition
-				name: (identifier) @class-name) @scope-root)
-
-			; Functions
-			((function_definition
-				declarator: (function_declarator
-					declarator: (identifier) @function-name)) @scope-root)
-
-			; Lambda functions
-			((declaration
-				declarator: (init_declarator
-					declarator: (identifier) @function-name
-					value: (lambda_expression))) @scope-root)
-
-			; Method
-			((function_definition
-				declarator: (function_declarator
-					declarator: (field_identifier) @method-name)) @scope-root)
-
-			; Method written outside class
-			((function_definition
-				declarator: (function_declarator
-					declarator: (scoped_identifier
-						name: (identifier) @method-name))) @scope-root)
-		]],
-		["python"] = [[
-			((class_definition
-				name: (identifier) @class-name) @scope-root)
-			((function_definition
-				name: (identifier) @function-name) @scope-root)
-		]]
-			-- FIXME: method query not working
-			-- ((class_definition
-			-- 	body: (block
-			-- 		(function_definition
-			-- 			name: (identifier) @method-name) @scope-root)))
-	},
 	separator = ' > ',
 }
 
+local query = {
+	["cpp"] = [[
+		; Namespace
+		((class_specifier
+			name: (type_identifier) @class-name
+			body: (field_declaration_list)) @scope-root)
+
+		; Struct
+		((struct_specifier
+			name: (type_identifier) @class-name) @scope-root)
+
+		; Class
+		((namespace_definition
+			name: (identifier) @class-name) @scope-root)
+
+		; Functions
+		((function_definition
+			declarator: (function_declarator
+				declarator: (identifier) @function-name)) @scope-root)
+
+		; Lambda functions
+		((declaration
+			declarator: (init_declarator
+				declarator: (identifier) @function-name
+				value: (lambda_expression))) @scope-root)
+
+		; Method
+		((function_definition
+			declarator: (function_declarator
+				declarator: (field_identifier) @method-name)) @scope-root)
+
+		; Method written outside class
+		((function_definition
+			declarator: (function_declarator
+				declarator: (scoped_identifier
+					name: (identifier) @method-name))) @scope-root)
+	]],
+	["python"] = [[
+		((class_definition
+			name: (identifier) @class-name) @scope-root)
+		((function_definition
+			name: (identifier) @function-name) @scope-root)
+	]]
+}
+-- FIXME: python main query not working
+-- ((if_statement
+-- 	condition: (comparison_operator
+-- 		(string) @function-name (#match? @function-name "__main__") )) @scope-root)
+
+-- FIXME: python method query not working
+-- ((class_definition
+-- 	body: (block
+-- 		(function_definition
+-- 			name: (identifier) @method-name) @scope-root)))
+
+
 function M.is_available()
-	return parsers.has_parser() and config.query[vim.bo.filetype] ~= nil
+	return parsers.has_parser() and query[vim.bo.filetype] ~= nil
 end
 
-function M.setup()
-	for k, v in pairs(config.query) do
+function M.setup(user_config)
+	if user_config then
+		if user_config.icons then
+			for k, v in pairs(user_config.icons) do
+				config[k] = v
+			end
+		end
+		if user_config.separator ~= nil then
+			config.separator = user_config.separator
+		end
+	end
+	for k, v in pairs(query) do
 		vim.treesitter.set_query(k, "nvimGPS", v)
 	end
 end
 
-M.setup() -- TODO: Remove
-
 local cache_value = ""
 
 function M.get_context()
+	-- Inserting text cause error nodes
 	if vim.fn.mode() == 'i' then
 		return cache_value
 	end
@@ -88,9 +104,12 @@ function M.get_context()
 	local node_text = {}
 
 	local node = current_node
+	-- local temp = {} -- Debug
 	while node do
+		-- table.insert(temp, 1, node:type()) -- Debug
 		local iter = gps_query:iter_captures(node)
 		local capture_ID, capture_node = iter()
+		-- if capture_node then table.insert(temp, 1, node:type().."/"..gps_query.captures[capture_ID].."/"..capture_node:type()) else table.insert(temp, 1, node:type()) end -- Debug
 		if capture_node == node and gps_query.captures[capture_ID] == "scope-root" then
 			capture_ID, capture_node = iter()
 			local capture_name = gps_query.captures[capture_ID]
@@ -98,16 +117,7 @@ function M.get_context()
 		end
 		node = node:parent()
 	end
-
-	-- for node in ts_locals.iter_scope_tree(current_node) do
-	-- 	local iter = gps_query:iter_captures(node)
-	-- 	local capture_ID, capture_node = iter()
-	-- 	if capture_node == node and gps_query.captures[capture_ID] == "scope-root" then
-	-- 		capture_ID, capture_node = iter()
-	-- 		local capture_name = gps_query.captures[capture_ID]
-	-- 		table.insert(node_text, 1, icons[capture_name]..ts_utils.get_node_text(capture_node)[1])
-	-- 	end
-	-- end
+	-- print(vim.inspect(temp)) -- Debug
 
 	cache_value = table.concat(node_text, config.separator)
 	return cache_value
