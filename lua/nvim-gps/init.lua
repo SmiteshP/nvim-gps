@@ -81,6 +81,22 @@ local query = {
 			name: (identifier) @method-name
 				body: (block)) @scope-root)
 	]],
+	["lua"] = [[
+		; Function
+		((function
+			(function_name (identifier) @function-name)) @scope-root)
+
+		; Local function
+		((local_function (identifier) @function-name) @scope-root)
+
+		; Local function assigned to variable
+		(local_variable_declaration
+			(variable_declarator (identifier) @function-name) . (function_definition) @scope-root)
+
+		; Method
+		((function
+			(function_name) @method-name) @scope-root)
+	]],
 	["python"] = [[
 		; Class
 		((class_definition
