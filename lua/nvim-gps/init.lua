@@ -1,5 +1,4 @@
 local ts_utils = require("nvim-treesitter.ts_utils")
-local ts_locals = require("nvim-treesitter.locals")
 local parsers = require("nvim-treesitter.parsers")
 
 local M = {}
@@ -71,14 +70,14 @@ local query = {
 -- 		(function_definition
 -- 			name: (identifier) @method-name) @scope-root)))
 
-
-function M.is_available()
-	return parsers.has_parser() and query[vim.bo.filetype] ~= nil
-end
-
 local cache_value = ""
 local gps_query = nil
 local bufnr = 0
+local setup_complete = false
+
+function M.is_available()
+	return setup_complete and parsers.has_parser() and query[vim.bo.filetype] ~= nil
+end
 
 function M.update_query()
 	gps_query = vim.treesitter.get_query(vim.bo.filetype, "nvimGPS")
@@ -106,6 +105,7 @@ function M.setup(user_config)
 		autocmd InsertLeave * silent! lua require("nvim-gps").update_query()
 		augroup END
 	]]
+	setup_complete = true
 end
 
 function M.get_location()
@@ -122,22 +122,20 @@ function M.get_location()
 	local icons = config.icons
 
 	local node_text = {}
-
 	local node = current_node
-	-- local temp = {} -- Debug
+
 	while node do
-		-- table.insert(temp, 1, node:type()) -- Debug
 		local iter = gps_query:iter_captures(node, bufnr)
 		local capture_ID, capture_node = iter()
-		-- if capture_node then table.insert(temp, 1, node:type().."/"..gps_query.captures[capture_ID].."/"..capture_node:type()) else table.insert(temp, 1, node:type()) end -- Debug
+
 		if capture_node == node and gps_query.captures[capture_ID] == "scope-root" then
 			capture_ID, capture_node = iter()
 			local capture_name = gps_query.captures[capture_ID]
 			table.insert(node_text, 1, icons[capture_name]..ts_utils.get_node_text(capture_node)[1])
 		end
+
 		node = node:parent()
 	end
-	-- print(vim.inspect(temp)) -- Debug
 
 	cache_value = table.concat(node_text, config.separator)
 	return cache_value
