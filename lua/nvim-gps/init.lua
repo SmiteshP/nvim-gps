@@ -110,6 +110,33 @@ local query = {
 		((if_statement
 			condition: (comparison_operator
 				(string) @function-name (#match? @function-name "__main__") )) @scope-root)
+	]],
+	["rust"] = [[
+		; Struct
+		((struct_item
+			name: (type_identifier) @class-name) @scope-root)
+
+		; Impl
+		((impl_item
+			type: (type_identifier) @class-name) @scope-root)
+
+		; Impl with generic
+		((impl_item
+			type: (generic_type
+				type: (type_identifier) @class-name)) @scope-root)
+
+		; Mod
+		((mod_item
+			name: (identifier) @class-name) @scope-root)
+
+		; Enum
+		((enum_item
+			name: (type_identifier) @class-name) @scope-root)
+
+		; Function
+		((function_item
+			name: (identifier) @function-name
+			body: (block)) @scope-root)
 	]]
 }
 -- FIXME: python method query not working
