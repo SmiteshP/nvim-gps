@@ -24,7 +24,7 @@ Install the plugin with your preferred package manager:
 ```lua
 -- Lua
 use {
-	"SmiteshP/which-key.nvim",
+	"SmiteshP/nvim-gps",
 	requires = "nvim-treesitter/nvim-treesitter"
 }
 ```
