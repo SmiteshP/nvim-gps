@@ -186,9 +186,8 @@ function M.setup(user_config)
 			config.separator = user_config.separator
 		end
 	end
-	for k, v in pairs(query) do
-		vim.treesitter.set_query(k, "nvimGPS", v)
-	end
+
+	-- Autocommands to  query
 	vim.cmd[[
 		augroup nvimGPS
 		autocmd!
@@ -196,7 +195,15 @@ function M.setup(user_config)
 		autocmd InsertLeave * silent! lua require("nvim-gps").update_query()
 		augroup END
 	]]
-	setup_complete = true
+
+	-- Minimize impact on start up time
+	vim.schedule(function()
+		for k, v in pairs(query) do
+			vim.treesitter.set_query(k, "nvimGPS", v)
+		end
+		M.update_query()
+		setup_complete = true
+	end)
 end
 
 function M.get_location()
