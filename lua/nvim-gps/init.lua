@@ -207,7 +207,7 @@ function M.setup(user_config)
 	if user_config then
 		if user_config.icons then
 			for k, v in pairs(user_config.icons) do
-				config[k] = v
+				config.icons[k] = v
 			end
 		end
 		if user_config.languages then
