@@ -98,10 +98,6 @@ local query = {
 			body: (statement_block)) @scope-root)
 	]],
 	["lua"] = [[
-		; Function
-		((function
-			(function_name (identifier) @function-name)) @scope-root)
-
 		; Local function
 		((local_function (identifier) @function-name) @scope-root)
 
@@ -109,9 +105,9 @@ local query = {
 		(local_variable_declaration
 			(variable_declarator (identifier) @function-name) . (function_definition) @scope-root)
 
-		; Method
+		; Function
 		((function
-			(function_name) @method-name) @scope-root)
+			(function_name) @function-name) @scope-root)
 	]],
 	["python"] = [[
 		; Class
