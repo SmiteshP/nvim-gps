@@ -82,6 +82,7 @@ local query = {
 		((call
 			function: (function_identifier)
 			(module) @class-name) @scope-root)
+
 		; def
 		((call
 			function: (function_identifier)
@@ -92,7 +93,6 @@ local query = {
 		((call
 			function: (function_identifier)
 			(identifier) @function-name) @scope-root)
-
 	]],
 	["go"] = [[
 		; Struct and Interface
