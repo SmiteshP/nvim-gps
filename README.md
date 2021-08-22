@@ -115,17 +115,11 @@ require('galaxyline').section.left[1]= {
 -- Lua
 local gps = require("nvim-gps")
 
-local function gps_location()
-	if gps.is_available() then
-		return gps.get_location()
-	else
-		return ""
-	end
-end
-
 require("lualine").setup({
 	sections = {
-		lualine_c = {gps_location}
+			lualine_c = {
+				{ gps.get_location, condition = gps.is_available },
+			}
 	}
 })
 ```
