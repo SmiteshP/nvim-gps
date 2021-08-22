@@ -33,6 +33,12 @@ local query = {
 		((function_definition
 			declarator: (function_declarator
 				declarator: (identifier) @function-name )) @scope-root)
+
+		; Function with pointer as return type
+		((function_definition
+			declarator: (pointer_declarator
+				declarator: (function_declarator
+					(identifier) @function-name))) @scope-root)
 	]],
 	["cpp"] = [[
 		; Namespace
