@@ -12,6 +12,7 @@ local config = {
 	languages = {
 		["c"] = true,
 		["cpp"] = true,
+		["elixir"] = true,
 		["go"] = true,
 		["java"] = true,
 		["javascript"] = true,
@@ -75,6 +76,23 @@ local query = {
 			declarator: (function_declarator
 				declarator: (scoped_identifier
 					name: (identifier) @method-name))) @scope-root)
+	]],
+	["elixir"] = [[
+		; defmodule
+		((call
+			function: (function_identifier)
+			(module) @class-name) @scope-root)
+		; def
+		((call
+			function: (function_identifier)
+			(call
+				function: (function_identifier) @method-name)) @scope-root)
+
+		; defp
+		((call
+			function: (function_identifier)
+			(identifier) @function-name) @scope-root)
+
 	]],
 	["go"] = [[
 		; Struct and Interface
