@@ -242,7 +242,7 @@ function M.get_location()
 	end
 
 	if not gps_query then
-		return "error"
+		M.update_query()
 	end
 
 	local current_node = ts_utils.get_node_at_cursor()
