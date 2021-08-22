@@ -9,6 +9,16 @@ local config = {
 		["function-name"] = ' ',
 		["method-name"] = ' '
 	},
+	languages = {
+		["c"] = true,
+		["cpp"] = true,
+		["go"] = true,
+		["java"] = true,
+		["javascript"] = true,
+		["lua"] = true,
+		["python"] = true,
+		["rust"] = true,
+	},
 	separator = ' > ',
 }
 
@@ -174,15 +184,17 @@ local query = {
 local cache_value = ""
 local gps_query = nil
 local bufnr = 0
+local filetype = ""
 local setup_complete = false
 
 function M.is_available()
-	return setup_complete and parsers.has_parser() and query[vim.bo.filetype] ~= nil
+	return setup_complete and parsers.has_parser() and config.languages[filetype]
 end
 
 function M.update_query()
 	gps_query = vim.treesitter.get_query(vim.bo.filetype, "nvimGPS")
 	bufnr = vim.fn.bufnr()
+	filetype = vim.bo.filetype
 end
 
 function M.setup(user_config)
@@ -190,6 +202,13 @@ function M.setup(user_config)
 		if user_config.icons then
 			for k, v in pairs(user_config.icons) do
 				config[k] = v
+			end
+		end
+		if user_config.languages then
+			for k, v in pairs(user_config.languages) do
+				if config.languages[k] then
+					config.languages[k] = v
+				end
 			end
 		end
 		if user_config.separator ~= nil then
