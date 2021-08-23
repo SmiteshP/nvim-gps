@@ -80,6 +80,9 @@ gps.get_location()  -- Returns a string with context information
 Few examples below
 
 ### [feline](https://github.com/famiu/feline.nvim)
+
+<details>
+<summary> example feline setup </summary>
 ```lua
 -- Lua
 table.insert(components.left.active, {
@@ -91,9 +94,12 @@ table.insert(components.left.active, {
 	end
 })
 ```
+</details>
 
 ### [galaxyline](https://github.com/glepnir/galaxyline.nvim)
 
+<details>
+<summary> example galaxyline setup </summary>
 ```lua
 -- Lua
 local gps = require("nvim-gps")
@@ -109,8 +115,12 @@ require('galaxyline').section.left[1]= {
 	}
 }
 ```
+</details>
 
 ### [lualine](https://github.com/hoob3rt/lualine.nvim)
+
+<details>
+<summary> example lualine setup </summary>
 ```lua
 -- Lua
 local gps = require("nvim-gps")
@@ -123,9 +133,15 @@ require("lualine").setup({
 	}
 })
 ```
-###[windline](https://github.com/windwp/windline.nvim)
+</details>
+
+### [windline](https://github.com/windwp/windline.nvim)
+
+<details>
+<summary> example windline setup </summary>
 ```lua
-local gps = require('nvim-gps')
+-- Lua
+local gps = require("nvim-gps")
 
 comps.gps = {
     function()
@@ -134,7 +150,7 @@ comps.gps = {
         end
         return ''
     end,
-    {'white', 'black'}
+    {"white", "black"}
 }
-
 ```
+</details>
