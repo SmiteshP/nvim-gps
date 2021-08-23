@@ -8,6 +8,12 @@ nvim-gps is a simple status line component that shows context of the current cur
 
 ![example](https://user-images.githubusercontent.com/43147494/130349444-fa7176a3-d068-4309-87ec-bcf6f0204261.png)
 
+Here is a barebones example how it looks in a statusline
+
+![nvim-gps-barebone-demo](https://user-images.githubusercontent.com/43147494/130415000-6ae9c965-d631-41b2-b1f0-40ad4840a192.gif)
+
+Here is a example of how it can look in a fully configured statusline
+
 ![nvim-gps-demo](https://user-images.githubusercontent.com/43147494/130349453-d3e1fd61-348e-439c-b013-3433fd284323.gif)
 
 ## ⚡️ Requirements
