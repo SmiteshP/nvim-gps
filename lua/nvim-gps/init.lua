@@ -252,7 +252,7 @@ function M.setup(user_config)
 	-- Minimize impact on start up time
 	vim.schedule(function()
 		for k, v in pairs(query) do
-			vim.treesitter.set_query(k, "nvimGPS", v)
+			if parsers.has_parser(k) then vim.treesitter.set_query(k, "nvimGPS", v) end
 		end
 		M.update_query()
 		setup_complete = true
