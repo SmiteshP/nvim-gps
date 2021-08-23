@@ -156,6 +156,18 @@ local query = {
 		; Function
 		((function
 			(function_name) @function-name) @scope-root)
+
+		; Function assigned to local variable
+		((local_variable_declaration
+			(variable_declarator
+				(identifier) @function-name)
+			(function_definition)) @scope-root)
+
+		; Function assigned to global variable
+		((variable_declaration
+			(variable_declarator
+				(identifier) @function-name)
+			(function_definition)) @scope-root)
 	]],
 	["python"] = [[
 		; Class
