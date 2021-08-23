@@ -1,5 +1,6 @@
 local ts_utils = require("nvim-treesitter.ts_utils")
-local parsers = require("nvim-treesitter.parsers")
+local ts_parsers = require("nvim-treesitter.parsers")
+local ts_queries = require("nvim-treesitter.query")
 
 local M = {}
 
@@ -23,209 +24,25 @@ local config = {
 	separator = ' > ',
 }
 
-local query = {
-	["c"] = [[
-		; Struct
-		((struct_specifier
-			name: (type_identifier) @class-name
-				body: (field_declaration_list)) @scope-root)
+-- TreeSitter module setup
+function M.init()
+	require("nvim-treesitter").define_modules {
+		nvimGPS = {
+			module_path = "nvim-gps",
+			is_supported = function(lang)
+				return ts_queries.get_query(lang, "nvimGPS") ~= nil
+			end
+		}
+	}
+end
 
-		; Function
-		((function_definition
-			declarator: (function_declarator
-				declarator: (identifier) @function-name )) @scope-root)
+function M.attach(bufnr, lang)
+	-- Nothing
+end
 
-		; Function with pointer as return type
-		((function_definition
-			declarator: (pointer_declarator
-				declarator: (function_declarator
-					(identifier) @function-name))) @scope-root)
-	]],
-	["cpp"] = [[
-		; Namespace
-		((class_specifier
-			name: (type_identifier) @class-name
-			body: (field_declaration_list)) @scope-root)
-
-		; Struct
-		((struct_specifier
-			name: (type_identifier) @class-name) @scope-root)
-
-		; Class
-		((namespace_definition
-			name: (identifier) @class-name) @scope-root)
-
-		; Function
-		((function_definition
-			declarator: (function_declarator
-				declarator: (identifier) @function-name)) @scope-root)
-
-		; Lambda function
-		((declaration
-			declarator: (init_declarator
-				declarator: (identifier) @function-name
-				value: (lambda_expression))) @scope-root)
-
-		; Method
-		((function_definition
-			declarator: (function_declarator
-				declarator: (field_identifier) @method-name)) @scope-root)
-
-		; Method written outside class
-		((function_definition
-			declarator: (function_declarator
-				declarator: (scoped_identifier
-					name: (identifier) @method-name))) @scope-root)
-	]],
-	["elixir"] = [[
-		; defmodule
-		((call
-			function: (function_identifier)
-			(module) @class-name) @scope-root)
-
-		; def
-		((call
-			function: (function_identifier)
-			(call
-				function: (function_identifier) @method-name)) @scope-root)
-
-		; defp
-		((call
-			function: (function_identifier)
-			(identifier) @function-name) @scope-root)
-	]],
-	["go"] = [[
-		; Struct and Interface
-		((type_declaration
-			(type_spec
-				name: (type_identifier) @class-name )) @scope-root)
-
-		; Function
-		((function_declaration
-			name: (identifier) @function-name) @scope-root)
-
-		; Method
-		((method_declaration
-			name: (field_identifier) @method-name) @scope-root)
-	]],
-	["java"] = [[
-		; Class
-		((class_declaration
-			name: (identifier) @class-name
-				body: (class_body)) @scope-root)
-
-		; Interface
-		((interface_declaration
-			name: (identifier) @class-name
-				body: (interface_body)) @scope-root)
-
-		; Enum
-		((enum_declaration
-			name: (identifier) @class-name
-				body: (enum_body)) @scope-root)
-
-		; Method
-		((method_declaration
-			name: (identifier) @method-name
-				body: (block)) @scope-root)
-	]],
-	["javascript"] = [[
-		; Class
-		((class_declaration
-			name: (identifier) @class-name
-			body: (class_body)) @scope-root)
-
-		; Function
-		((function_declaration
-			name: (identifier) @function-name
-			body: (statement_block)) @scope-root)
-
-		; Method
-		((method_definition
-			name: (property_identifier) @method-name
-			body: (statement_block)) @scope-root)
-	]],
-	["lua"] = [[
-		; Local function
-		((local_function (identifier) @function-name) @scope-root)
-
-		; Local function assigned to variable
-		(local_variable_declaration
-			(variable_declarator (identifier) @function-name) . (function_definition) @scope-root)
-
-		; Function
-		((function
-			(function_name) @function-name) @scope-root)
-
-		; Function assigned to local variable
-		((local_variable_declaration
-			(variable_declarator
-				(identifier) @function-name)
-			(function_definition)) @scope-root)
-
-		; Function assigned to global variable
-		((variable_declaration
-			(variable_declarator
-				(identifier) @function-name)
-			(function_definition)) @scope-root)
-
-		; Function assigned to field inside table
-		((field
-			(identifier) @method-name
-			(function_definition)) @scope-root)
-
-		; Function assigned to string field inside table
-		((field
-			(string) @method-name
-			(function_definition)) @scope-root)
-	]],
-	["python"] = [[
-		; Class
-		((class_definition
-			name: (identifier) @class-name) @scope-root)
-
-		; Function
-		((function_definition
-			name: (identifier) @function-name) @scope-root)
-
-		; Main
-		((if_statement
-			condition: (comparison_operator
-				(string) @function-name (#match? @function-name "__main__") )) @scope-root)
-	]],
-	["rust"] = [[
-		; Struct
-		((struct_item
-			name: (type_identifier) @class-name) @scope-root)
-
-		; Impl
-		((impl_item
-			type: (type_identifier) @class-name) @scope-root)
-
-		; Impl with generic
-		((impl_item
-			type: (generic_type
-				type: (type_identifier) @class-name)) @scope-root)
-
-		; Mod
-		((mod_item
-			name: (identifier) @class-name) @scope-root)
-
-		; Enum
-		((enum_item
-			name: (type_identifier) @class-name) @scope-root)
-
-		; Function
-		((function_item
-			name: (identifier) @function-name
-			body: (block)) @scope-root)
-	]]
-}
--- FIXME: python method query not working
--- ((class_definition
--- 	body: (block
--- 		(function_definition
--- 			name: (identifier) @method-name) @scope-root)))
+function M.detach(bufnr)
+	-- Nothing
+end
 
 local cache_value = ""
 local gps_query = nil
@@ -234,7 +51,7 @@ local filetype = ""
 local setup_complete = false
 
 function M.is_available()
-	return setup_complete and parsers.has_parser() and config.languages[filetype]
+	return setup_complete and ts_parsers.has_parser() and config.languages[filetype]
 end
 
 function M.update_query()
@@ -262,7 +79,7 @@ function M.setup(user_config)
 		end
 	end
 
-	-- Autocommands to  query
+	-- Autocommands to query
 	vim.cmd[[
 		augroup nvimGPS
 		autocmd!
@@ -271,14 +88,13 @@ function M.setup(user_config)
 		augroup END
 	]]
 
-	-- Minimize impact on start up time
-	vim.schedule(function()
-		for k, v in pairs(query) do
-			if parsers.has_parser(k) then vim.treesitter.set_query(k, "nvimGPS", v) end
-		end
-		M.update_query()
-		setup_complete = true
-	end)
+	require("nvim-treesitter.configs").setup({
+		nvimGPS = {
+			enable = true
+		}
+	})
+
+	setup_complete = true
 end
 
 function M.get_location()
