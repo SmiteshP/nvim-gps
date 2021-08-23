@@ -123,3 +123,18 @@ require("lualine").setup({
 	}
 })
 ```
+###[windline](https://github.com/windwp/windline.nvim)
+```lua
+local gps = require('nvim-gps')
+
+comps.gps = {
+    function()
+        if gps.is_available() then
+            return gps.get_location()
+        end
+        return ''
+    end,
+    {'white', 'black'}
+}
+
+```
