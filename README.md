@@ -5,6 +5,7 @@ Take this handy dandy gps with you on your coding adventures and always know whe
 ## 🤔 What is nvim-gps?
 
 nvim-gps is a simple status line component that shows context of the current cursor position in file. It is similar to the statusline function provided by [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter/blob/af96150a2d34a05b7265ee3c42425315bcd62e39/doc/nvim-treesitter.txt#L414), but smarter. Using custom treesitter queries for each language, nvim-gps is able to show exact name of containing class, struct, function, method, etc. along with some fancy symbols!
+You can find out which languages are currently supported by looking under the "queries" directory.
 
 ![example](https://user-images.githubusercontent.com/43147494/130349444-fa7176a3-d068-4309-87ec-bcf6f0204261.png)
 
@@ -168,3 +169,9 @@ comps.gps = {
 ```
 
 </details>
+
+## 🔥 Contributions
+
+Is your favorite language not supported? Or did you find something not being captured by the nvim-gps? Please consider opening a issue, or even better make a PR and solve the issue!! 😄
+
+Please read the CONTRIBUTING.md to understand how the treesitter queries work and how you can add/enhance the queries for your favorite programming languages!
