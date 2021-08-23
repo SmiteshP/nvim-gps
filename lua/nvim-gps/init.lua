@@ -168,6 +168,16 @@ local query = {
 			(variable_declarator
 				(identifier) @function-name)
 			(function_definition)) @scope-root)
+
+		; Function assigned to field inside table
+		((field
+			(identifier) @method-name
+			(function_definition)) @scope-root)
+
+		; Function assigned to string field inside table
+		((field
+			(string) @method-name
+			(function_definition)) @scope-root)
 	]],
 	["python"] = [[
 		; Class
