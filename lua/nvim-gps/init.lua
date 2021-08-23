@@ -51,7 +51,7 @@ local filetype = ""
 local setup_complete = false
 
 function M.is_available()
-	return setup_complete and ts_parsers.has_parser() and config.languages[filetype]
+	return setup_complete and config.languages[filetype]
 end
 
 function M.update_query()
@@ -61,6 +61,12 @@ function M.update_query()
 end
 
 function M.setup(user_config)
+	-- By default enable all languages
+	for k, _ in pairs(config.languages) do
+		config.languages[k] = ts_parsers.has_parser(k)
+	end
+
+	-- Override default with user settings
 	if user_config then
 		if user_config.icons then
 			for k, v in pairs(user_config.icons) do
