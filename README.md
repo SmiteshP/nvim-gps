@@ -46,7 +46,7 @@ Plug "SmiteshP/nvim-gps"
 
 ## ⚙️ Configuration
 
-nvim-gps provides a setup function that takes in a table with configuration options.
+nvim-gps provides a `setup` function that takes in a table with configuration options. Note: `setup` function needs to be called once for nvim-gps to work.
 
 ```lua
 -- Lua
