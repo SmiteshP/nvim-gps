@@ -125,10 +125,24 @@ function M.get_location()
 		local iter = gps_query:iter_captures(node, bufnr)
 		local capture_ID, capture_node = iter()
 
-		if capture_node == node and gps_query.captures[capture_ID] == "scope-root" then
-			capture_ID, capture_node = iter()
-			local capture_name = gps_query.captures[capture_ID]
-			table.insert(node_text, 1, icons[capture_name]..ts_utils.get_node_text(capture_node)[1])
+		if capture_node == node then
+			if gps_query.captures[capture_ID] == "scope-root" then
+
+				capture_ID, capture_node = iter()
+				local capture_name = gps_query.captures[capture_ID]
+				table.insert(node_text, 1, icons[capture_name]..ts_utils.get_node_text(capture_node)[1])
+
+			elseif gps_query.captures[capture_ID] == "scope-root-2" then
+
+				capture_ID, capture_node = iter()
+				local capture_name = gps_query.captures[capture_ID]
+				table.insert(node_text, 1, icons[capture_name]..ts_utils.get_node_text(capture_node)[1])
+
+				capture_ID, capture_node = iter()
+				capture_name = gps_query.captures[capture_ID]
+				table.insert(node_text, 2, icons[capture_name]..ts_utils.get_node_text(capture_node)[1])
+
+			end
 		end
 
 		node = node:parent()
