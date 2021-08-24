@@ -1,5 +1,5 @@
 
-; Namespace
+; Class
 ((class_specifier
 	name: (type_identifier) @class-name
 	body: (field_declaration_list)) @scope-root)
@@ -9,9 +9,10 @@
 	name: (type_identifier) @class-name
 	body: (field_declaration_list)) @scope-root)
 
-; Class
+; Namespace
 ((namespace_definition
-	name: (identifier) @class-name) @scope-root)
+	name: (identifier) @class-name
+	body: (declaration_list)) @scope-root)
 
 ; Function
 ((function_definition
