@@ -21,6 +21,7 @@ local config = {
 		["lua"] = true,
 		["python"] = true,
 		["rust"] = true,
+		["typescript"] = true,
 	},
 	separator = ' > ',
 }
