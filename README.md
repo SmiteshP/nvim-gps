@@ -148,6 +148,23 @@ require("lualine").setup({
 
 </details>
 
+### vimscript
+
+<details>
+<summary> example setup using native vim way </summary>
+
+```vim
+-- vimscript
+func! NvimGps() abort
+	return luaeval("require'nvim-gps'.is_available()") ?
+		\ luaeval("require'nvim-gps'.get_location()") : ''
+endf
+
+set statusline+=%{NvimGps()}
+```
+
+</details>
+
 ### [windline](https://github.com/windwp/windline.nvim)
 
 <details>
@@ -158,13 +175,13 @@ require("lualine").setup({
 local gps = require("nvim-gps")
 
 comps.gps = {
-    function()
-        if gps.is_available() then
-            return gps.get_location()
-        end
-        return ''
-    end,
-    {"white", "black"}
+	function()
+		if gps.is_available() then
+			return gps.get_location()
+		end
+		return ''
+	end,
+	{"white", "black"}
 }
 ```
 
