@@ -11,6 +11,7 @@ local config = {
 		["method-name"] = ' '
 	},
 	languages = {
+		["bash"] = true,       -- bash and zsh
 		["c"] = true,
 		["cpp"] = true,
 		["elixir"] = true,
@@ -47,17 +48,17 @@ end
 local cache_value = ""
 local gps_query = nil
 local bufnr = 0
-local filetype = ""
+local filelang = ""
 local setup_complete = false
 
 function M.is_available()
-	return setup_complete and config.languages[filetype]
+	return setup_complete and config.languages[filelang]
 end
 
 function M.update_query()
-	gps_query = vim.treesitter.get_query(vim.bo.filetype, "nvimGPS")
+	filelang = ts_parsers.ft_to_lang(vim.bo.filetype)
 	bufnr = vim.fn.bufnr()
-	filetype = vim.bo.filetype
+	gps_query = vim.treesitter.get_query(filelang, "nvimGPS")
 end
 
 function M.setup(user_config)
