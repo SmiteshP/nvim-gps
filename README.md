@@ -154,7 +154,7 @@ require("lualine").setup({
 <summary> example setup using native vim way </summary>
 
 ```vim
--- vimscript
+" vimscript
 func! NvimGps() abort
 	return luaeval("require'nvim-gps'.is_available()") ?
 		\ luaeval("require'nvim-gps'.get_location()") : ''
