@@ -1,8 +1,7 @@
 
 ; Struct and Interface
-((type_declaration
-	(type_spec
-		name: (type_identifier) @class-name )) @scope-root)
+((type_spec
+	name: (type_identifier) @class-name) @scope-root)
 
 ; Function
 ((function_declaration
