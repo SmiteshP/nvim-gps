@@ -9,4 +9,7 @@
 
 ; Method
 ((method_declaration
-	name: (field_identifier) @method-name) @scope-root)
+	receiver: (parameter_list
+		(parameter_declaration
+			type: (type_identifier) @class-name))
+	name: (field_identifier) @method-name) @scope-root-2)
