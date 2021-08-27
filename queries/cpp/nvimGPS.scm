@@ -41,7 +41,10 @@
 ((function_definition
 	declarator: (function_declarator
 		declarator: (scoped_identifier
-			namespace: (namespace_identifier) @class-name
+			namespace: [
+				(namespace_identifier) @class-name
+				(scoped_namespace_identifier) @class-name
+				]
 			name: (identifier) @method-name))) @scope-root-2)
 
 ; Method written outside a template class
