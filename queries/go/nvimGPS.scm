@@ -14,10 +14,10 @@
 			type: (type_identifier) @class-name))
 	name: (field_identifier) @method-name) @scope-root-2)
 
-; Method
+; Method with pointer
 ((method_declaration
 	receiver: (parameter_list
 		(parameter_declaration
 			type: (pointer_type 
-				(type_identifier)) @class-name))
+				(type_identifier) @class-name)))
 	name: (field_identifier) @method-name) @scope-root-2)
