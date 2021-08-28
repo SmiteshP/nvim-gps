@@ -23,3 +23,16 @@
 ((variable_declarator
 	name: (identifier) @function-name
 	value: (function)) @scope-root)
+
+; Tests
+((expression_statement
+	(call_expression
+		function: (identifier)
+		arguments: (arguments
+			(string) @method-name
+			(arrow_function)))) @scope-root)
+
+; Arrow function methods
+((field_definition
+	property: (property_identifier) @method-name
+	value: (arrow_function)) @scope-root)
