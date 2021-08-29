@@ -1,6 +1,5 @@
 local ts_utils = require("nvim-treesitter.ts_utils")
 local ts_parsers = require("nvim-treesitter.parsers")
-local ts_queries = require("nvim-treesitter.query")
 
 local M = {}
 
@@ -25,26 +24,6 @@ local config = {
 	},
 	separator = ' > ',
 }
-
--- TreeSitter module setup
-function M.init()
-	require("nvim-treesitter").define_modules {
-		nvimGPS = {
-			module_path = "nvim-gps",
-			is_supported = function(lang)
-				return ts_queries.get_query(lang, "nvimGPS") ~= nil
-			end
-		}
-	}
-end
-
-function M.attach(bufnr, lang)
-	-- Nothing
-end
-
-function M.detach(bufnr)
-	-- Nothing
-end
 
 local cache_value = ""
 local gps_query = nil

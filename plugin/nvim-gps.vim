@@ -1,1 +1,1 @@
-lua require("nvim-gps").init()
+lua require("nvim-gps.internal").init()
