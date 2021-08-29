@@ -16,7 +16,6 @@
 
 ; Function
 ((function_definition
-	type: (_)
 	declarator: (function_declarator
 		declarator: (identifier) @function-name)) @scope-root)
 
