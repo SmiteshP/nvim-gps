@@ -43,6 +43,8 @@
 			namespace: [
 				(namespace_identifier) @class-name
 				(scoped_namespace_identifier) @multi-class-name
+				(template_type
+					(scoped_type_identifier) @multi-class-name)
 				]
 			name: (identifier) @method-name))) @scope-root-2)
 
