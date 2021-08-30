@@ -5,7 +5,6 @@ Take this handy dandy gps with you on your coding adventures and always know whe
 ## 🤔 What is nvim-gps?
 
 nvim-gps is a simple status line component that shows context of the current cursor position in file. It is similar to the statusline function provided by [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter/blob/af96150a2d34a05b7265ee3c42425315bcd62e39/doc/nvim-treesitter.txt#L414), but smarter. Using custom treesitter queries for each language, nvim-gps is able to show exact name of containing class, struct, function, method, etc. along with some fancy symbols!
-You can find out which languages are currently supported by looking under the "queries" directory.
 
 ![example](https://user-images.githubusercontent.com/43147494/130349444-fa7176a3-d068-4309-87ec-bcf6f0204261.png)
 
@@ -16,6 +15,21 @@ Here is a barebones example how it looks in a statusline
 Here is a example of how it can look in a fully configured statusline
 
 ![nvim-gps-demo](https://user-images.githubusercontent.com/43147494/130349453-d3e1fd61-348e-439c-b013-3433fd284323.gif)
+
+## ✅ Supported Languages
+
+* Bash (and Zsh)
+* C
+* C++
+* Elixir
+* Go
+* Java
+* Javascript
+* Lua
+* Python
+* Rust
+* Typescript
+* Typescript react
 
 ## ⚡️ Requirements
 
@@ -58,16 +72,12 @@ require("nvim-gps").setup({
 		["function-name"] = ' ',   -- Functions
 		["method-name"] = ' '      -- Methods (functions inside class-like objects)
 	},
-	languages = {                    -- You can disable any language individually here
-		["c"] = true,
-		["cpp"] = true,
-		["go"] = true,
-		["java"] = true,
-		["javascript"] = true,
-		["lua"] = true,
-		["python"] = true,
-		["rust"] = true,
-	},
+	-- Disable any languages individually over here
+	-- Any language not disabled here is enabled by default
+	languages = {
+		-- ["bash"] = false,
+		-- ["go"] = false,
+	}
 	separator = ' > ',
 })
 ```
