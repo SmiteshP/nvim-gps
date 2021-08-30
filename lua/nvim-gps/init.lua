@@ -40,6 +40,13 @@ local function default_transform(capture_name, capture_text)
 end
 
 local transform_lang = {
+	["cpp"] = function(capture_name, capture_text)
+		if capture_name == "multi-class-name" then
+			return config.icons["class-name"]..string.gsub(capture_text, "%s*%:%:%s*", config.separator..config.icons["class-name"])
+		else
+			return default_transform(capture_name, capture_text)
+		end
+	end
 }
 
 function M.is_available()
