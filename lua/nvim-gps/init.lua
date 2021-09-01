@@ -53,11 +53,14 @@ function M.is_available()
 	return setup_complete and config.languages[filelang]
 end
 
-function M.update_query()
+function M.update_fileinfo()
 	filelang = ts_parsers.ft_to_lang(vim.bo.filetype)
 	bufnr = vim.fn.bufnr()
-	gps_query = vim.treesitter.get_query(filelang, "nvimGPS")
 	transform = transform_lang[filelang]
+end
+
+function M.update_query()
+	gps_query = vim.treesitter.get_query(filelang, "nvimGPS")
 end
 
 function M.setup(user_config)
@@ -94,6 +97,7 @@ function M.setup(user_config)
 	vim.cmd[[
 		augroup nvimGPS
 		autocmd!
+		autocmd BufEnter * silent! lua require("nvim-gps").update_fileinfo()
 		autocmd BufEnter * silent! lua require("nvim-gps").update_query()
 		autocmd InsertLeave * silent! lua require("nvim-gps").update_query()
 		augroup END
