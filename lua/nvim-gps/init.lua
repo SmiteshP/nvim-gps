@@ -14,6 +14,7 @@ local config = {
 		["c"] = true,
 		["cpp"] = true,
 		["elixir"] = true,
+		["fennel"] = true,
 		["go"] = true,
 		["java"] = true,
 		["javascript"] = true,

@@ -22,14 +22,14 @@ Here is a example of how it can look in a fully configured statusline
 * C
 * C++
 * Elixir
+* Fennel
 * Go
 * Java
 * Javascript
 * Lua
 * Python
 * Rust
-* Typescript
-* Typescript react
+* Typescript (and tsx)
 
 ## ⚡️ Requirements
 
