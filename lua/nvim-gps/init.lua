@@ -17,6 +17,7 @@ local config = {
 		["fennel"] = true,
 		["go"] = true,
 		["java"] = true,
+		["jsx"] = true,
 		["javascript"] = true,
 		["lua"] = true,
 		["python"] = true,

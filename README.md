@@ -25,7 +25,7 @@ Here is a example of how it can look in a fully configured statusline
 * Fennel
 * Go
 * Java
-* Javascript
+* Javascript (and jsx)
 * Lua
 * Python
 * Rust
