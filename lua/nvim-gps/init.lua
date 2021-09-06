@@ -56,7 +56,7 @@ local transform_lang = {
 }
 
 function M.is_available()
-	return setup_complete and config.languages[ts_parsers.ft_to_lang(vim.bo.filetype)]
+	return setup_complete and (config.languages[ts_parsers.ft_to_lang(vim.bo.filetype)] == true)
 end
 
 function M.setup(user_config)
