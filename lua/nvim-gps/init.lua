@@ -45,6 +45,13 @@ local transform_lang = {
 		else
 			return default_transform(capture_name, capture_text)
 		end
+	end,
+	["python"] = function(capture_name, capture_text)
+		if capture_name == "main-function" then
+			return config.icons["function-name"].."main"
+		else
+			return default_transform(capture_name, capture_text)
+		end
 	end
 }
 
