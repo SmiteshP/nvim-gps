@@ -1,5 +1,6 @@
 local ts_utils = require("nvim-treesitter.ts_utils")
 local ts_parsers = require("nvim-treesitter.parsers")
+local ts_queries = require("nvim-treesitter.query")
 
 local M = {}
 
@@ -29,11 +30,7 @@ local config = {
 }
 
 local cache_value = ""
-local gps_query = nil
-local bufnr = 0
-local filelang = ""
 local setup_complete = false
-local transform = nil
 
 local function default_transform(capture_name, capture_text)
 	if config.icons[capture_name] ~= nil then
@@ -52,17 +49,7 @@ local transform_lang = {
 }
 
 function M.is_available()
-	return setup_complete and config.languages[filelang]
-end
-
-function M.update_fileinfo()
-	filelang = ts_parsers.ft_to_lang(vim.bo.filetype)
-	bufnr = vim.fn.bufnr()
-	transform = transform_lang[filelang]
-end
-
-function M.update_query()
-	gps_query = vim.treesitter.get_query(filelang, "nvimGPS")
+	return setup_complete and config.languages[ts_parsers.ft_to_lang(vim.bo.filetype)]
 end
 
 function M.setup(user_config)
@@ -73,8 +60,6 @@ function M.setup(user_config)
 			transform_lang[k] = default_transform
 		end
 	end
-
-	transform = default_transform
 
 	-- Override default with user settings
 	if user_config then
@@ -95,16 +80,6 @@ function M.setup(user_config)
 		end
 	end
 
-	-- Autocommands to query
-	vim.cmd[[
-		augroup nvimGPS
-		autocmd!
-		autocmd BufEnter * silent! lua require("nvim-gps").update_fileinfo()
-		autocmd BufEnter * silent! lua require("nvim-gps").update_query()
-		autocmd InsertLeave * silent! lua require("nvim-gps").update_query()
-		augroup END
-	]]
-
 	require("nvim-treesitter.configs").setup({
 		nvimGPS = {
 			enable = true
@@ -120,11 +95,12 @@ function M.get_location()
 		return cache_value
 	end
 
+	local filelang = ts_parsers.ft_to_lang(vim.bo.filetype)
+	local gps_query = ts_queries.get_query(filelang, "nvimGPS")
+	local transform = transform_lang[filelang]
+
 	if not gps_query then
-		M.update_query()
-		if not gps_query then
-			return "error"
-		end
+		return "error"
 	end
 
 	local current_node = ts_utils.get_node_at_cursor()
@@ -133,7 +109,7 @@ function M.get_location()
 	local node = current_node
 
 	while node do
-		local iter = gps_query:iter_captures(node, bufnr)
+		local iter = gps_query:iter_captures(node, 0)
 		local capture_ID, capture_node = iter()
 
 		if capture_node == node then
