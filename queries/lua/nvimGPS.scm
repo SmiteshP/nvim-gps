@@ -29,5 +29,5 @@
 
 ; Function assigned to string field inside table
 ((field
-	(string) @method-name
+	(string) @string-method
 	(function_definition)) @scope-root)

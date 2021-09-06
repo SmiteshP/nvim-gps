@@ -46,6 +46,13 @@ local transform_lang = {
 			return default_transform(capture_name, capture_text)
 		end
 	end,
+	["lua"] = function(capture_name, capture_text)
+		if capture_name == "string-method" then
+			return config.icons["method-name"]..string.match(capture_text, "[\"\'](.*)[\"\']")
+		else
+			return default_transform(capture_name, capture_text)
+		end
+	end,
 	["python"] = function(capture_name, capture_text)
 		if capture_name == "main-function" then
 			return config.icons["function-name"].."main"
