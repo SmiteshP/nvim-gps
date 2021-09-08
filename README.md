@@ -27,6 +27,7 @@ Here is a example of how it can look in a fully configured statusline
 * Java
 * Javascript (and jsx)
 * Lua
+* Ocaml
 * Python
 * Rust
 * Typescript (and tsx)
