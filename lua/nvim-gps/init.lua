@@ -21,6 +21,7 @@ local config = {
 		["jsx"] = true,
 		["javascript"] = true,
 		["lua"] = true,
+		["ocaml"] = true,
 		["python"] = true,
 		["rust"] = true,
 		["tsx"] = true,
