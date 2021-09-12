@@ -130,7 +130,9 @@ function M.get_location()
 		if capture_node == node then
 			if gps_query.captures[capture_ID] == "scope-root" then
 
-				capture_ID, capture_node = iter()
+				while capture_node == node do
+					capture_ID, capture_node = iter()
+				end
 				local capture_name = gps_query.captures[capture_ID]
 				table.insert(node_text, 1, transform(capture_name, ts_utils.get_node_text(capture_node)[1]))
 
