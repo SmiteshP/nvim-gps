@@ -80,7 +80,7 @@ require("nvim-gps").setup({
 	languages = {
 		-- ["bash"] = false,
 		-- ["go"] = false,
-	}
+	},
 	separator = ' > ',
 })
 ```
