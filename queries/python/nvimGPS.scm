@@ -16,4 +16,4 @@
 ; Main
 ((if_statement
 	condition: (comparison_operator
-		(string) @main-function (#match? @main-function "__main__") )) @scope-root)
+		(string) @main-function (#match? @main-function "[\"\']__main__[\"\']"))) @scope-root)
