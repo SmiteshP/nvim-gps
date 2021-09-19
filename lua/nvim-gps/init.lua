@@ -1,6 +1,7 @@
 local ts_utils = require("nvim-treesitter.ts_utils")
 local ts_parsers = require("nvim-treesitter.parsers")
 local ts_queries = require("nvim-treesitter.query")
+local gps_utils = require("nvim-gps.utils")
 
 local M = {}
 
@@ -51,6 +52,15 @@ local transform_lang = {
 	["lua"] = function(capture_name, capture_text)
 		if capture_name == "string-method" then
 			return config.icons["method-name"]..string.match(capture_text, "[\"\'](.*)[\"\']")
+		elseif capture_name == "multi-container" then
+			return config.icons["container-name"]..string.gsub(capture_text, "%.", config.separator..config.icons["container-name"])
+		elseif capture_name == "table-function" then
+			local temp = gps_utils.split(capture_text, "%.")
+			local ret = ""
+			for i = 1, #temp-1  do
+				ret = ret..config.icons["container-name"]..temp[i]..config.separator
+			end
+			return ret..config.icons["function-name"]..temp[#temp]
 		else
 			return default_transform(capture_name, capture_text)
 		end
