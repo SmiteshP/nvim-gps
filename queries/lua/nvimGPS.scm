@@ -8,7 +8,13 @@
 
 ; Function
 ((function
-	(function_name) @function-name) @scope-root)
+	(function_name) @table-function) @scope-root)
+
+; Function as table field outside table
+((variable_declaration
+	(variable_declarator
+		(field_expression) @table-function)
+	(function_definition)) @scope-root)
 
 ; Function assigned to local variable
 ((local_variable_declaration
@@ -31,3 +37,18 @@
 ((field
 	(string) @string-method
 	(function_definition)) @scope-root)
+
+; Table
+((local_variable_declaration
+	(variable_declarator) @container-name
+	(table)) @scope-root)
+
+; Field Table
+((field
+	(identifier) @container-name
+	(table)) @scope-root)
+
+; Multi tables
+((variable_declaration
+	(variable_declarator) @multi-container
+	(table)) @scope-root)
