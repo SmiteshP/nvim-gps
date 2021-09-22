@@ -56,11 +56,11 @@ local transform_lang = {
 			local text = string.match(capture_text, "<(.*)>")
 			local tag_name, attributes = string.match(text, "(%w+)(.*)")
 			local ret = tag_name
-			local id_name = string.match(attributes, "id%s*=%s*%\"(%w+)%\"")
+			local id_name = string.match(attributes, "id%s*=%s*%\"([^%s]+)%\"")
 			if id_name ~= nil then
 				ret = ret..'#'..id_name
 			end
-			local class_name = string.match(attributes, "class%s*=%s*%\"([%w%s]+)%\"")
+			local class_name = string.match(attributes, "class%s*=%s*%\"([%w-_%s]+)%\"")
 			if class_name ~= nil then
 				ret = ret..'.'..string.gsub(class_name, "%s+", '.')
 			end
