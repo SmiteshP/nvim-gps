@@ -64,7 +64,7 @@ local transform_lang = {
 			if class_name ~= nil then
 				ret = ret..'.'..string.gsub(class_name, "%s+", '.')
 			end
-			return ret
+			return config.icons["tag-name"]..ret
 		end
 	end,
 	["lua"] = function(capture_name, capture_text)
