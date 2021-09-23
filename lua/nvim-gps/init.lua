@@ -27,6 +27,7 @@ local config = {
 		["lua"] = true,
 		["ocaml"] = true,
 		["python"] = true,
+		["ruby"] = true,
 		["rust"] = true,
 		["tsx"] = true,
 		["typescript"] = true,
