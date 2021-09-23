@@ -92,19 +92,17 @@ local transform_lang = {
 	end
 }
 
+setmetatable(transform_lang, {
+	__index = function()
+		return default_transform
+	end
+})
+
 function M.is_available()
-	return setup_complete and (config.languages[ts_parsers.ft_to_lang(vim.bo.filetype)] == true)
+	return setup_complete and config.languages[ts_parsers.ft_to_lang(vim.bo.filetype)]
 end
 
 function M.setup(user_config)
-	-- By default enable all languages
-	for k, _ in pairs(config.languages) do
-		config.languages[k] = ts_parsers.has_parser(k)
-		if transform_lang[k] == nil then
-			transform_lang[k] = default_transform
-		end
-	end
-
 	-- Override default with user settings
 	if user_config then
 		if user_config.icons then
