@@ -20,6 +20,7 @@ local config = {
 		["elixir"] = true,
 		["fennel"] = true,
 		["go"] = true,
+		["html"] = true,
 		["java"] = true,
 		["jsx"] = true,
 		["javascript"] = true,
@@ -48,6 +49,22 @@ local transform_lang = {
 			return config.icons["class-name"]..string.gsub(capture_text, "%s*%:%:%s*", config.separator..config.icons["class-name"])
 		else
 			return default_transform(capture_name, capture_text)
+		end
+	end,
+	["html"] = function(capture_name, capture_text)
+		if capture_name == "tag-name" then
+			local text = string.match(capture_text, "<(.*)>")
+			local tag_name, attributes = string.match(text, "(%w+)(.*)")
+			local ret = tag_name
+			local id_name = string.match(attributes, "id%s*=%s*%\"([^%s]+)%\"")
+			if id_name ~= nil then
+				ret = ret..'#'..id_name
+			end
+			local class_name = string.match(attributes, "class%s*=%s*%\"([%w-_%s]+)%\"")
+			if class_name ~= nil then
+				ret = ret..'.'..string.gsub(class_name, "%s+", '.')
+			end
+			return config.icons["tag-name"]..ret
 		end
 	end,
 	["lua"] = function(capture_name, capture_text)

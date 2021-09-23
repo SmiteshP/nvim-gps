@@ -24,6 +24,7 @@ Here is a example of how it can look in a fully configured statusline
 * Elixir
 * Fennel
 * Go
+* Html
 * Java
 * Javascript (and jsx)
 * Lua
