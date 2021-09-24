@@ -5,6 +5,12 @@ local gps_utils = require("nvim-gps.utils")
 
 local M = {}
 
+local current_symbols = {
+	lang = nil,
+	icons = {},
+	separator = ''
+}
+
 local config = {
 	icons = {
 		["class-name"] = ' ',
@@ -33,21 +39,46 @@ local config = {
 		["typescript"] = true,
 	},
 	separator = ' > ',
+	lang_specific = {}
 }
 
 local cache_value = ""
 local setup_complete = false
 
 local function default_transform(capture_name, capture_text)
-	if config.icons[capture_name] ~= nil then
-		return config.icons[capture_name] .. capture_text
+	if current_symbols.icons[capture_name] ~= nil then
+		return current_symbols.icons[capture_name] .. capture_text
+	end
+end
+
+local function update_icons(filelang)
+	current_symbols.lang = filelang
+
+	-- Reset to default
+	current_symbols.icons = config.icons
+	current_symbols.separator = config.separator
+
+	-- Override
+	local lang_specific = config.lang_specific
+	if lang_specific[filelang] ~= nil then
+		local override_icons = lang_specific[filelang].icons
+
+		if override_icons ~= nil then
+			for k, v in pairs(override_icons) do
+				current_symbols.icons[k] = v
+			end
+		end
+
+		if lang_specific[filelang].separator ~= nil then
+			current_symbols.separator = lang_specific[filelang].separator
+		end
 	end
 end
 
 local transform_lang = {
 	["cpp"] = function(capture_name, capture_text)
 		if capture_name == "multi-class-name" then
-			return config.icons["class-name"]..string.gsub(capture_text, "%s*%:%:%s*", config.separator..config.icons["class-name"])
+			return current_symbols.icons["class-name"]..string.gsub(capture_text, "%s*%:%:%s*", current_symbols.separator..current_symbols.icons["class-name"])
 		else
 			return default_transform(capture_name, capture_text)
 		end
@@ -65,28 +96,28 @@ local transform_lang = {
 			if class_name ~= nil then
 				ret = ret..'.'..string.gsub(class_name, "%s+", '.')
 			end
-			return config.icons["tag-name"]..ret
+			return current_symbols.icons["tag-name"]..ret
 		end
 	end,
 	["lua"] = function(capture_name, capture_text)
 		if capture_name == "string-method" then
-			return config.icons["method-name"]..string.match(capture_text, "[\"\'](.*)[\"\']")
+			return current_symbols.icons["method-name"]..string.match(capture_text, "[\"\'](.*)[\"\']")
 		elseif capture_name == "multi-container" then
-			return config.icons["container-name"]..string.gsub(capture_text, "%.", config.separator..config.icons["container-name"])
+			return current_symbols.icons["container-name"]..string.gsub(capture_text, "%.", current_symbols.separator..current_symbols.icons["container-name"])
 		elseif capture_name == "table-function" then
 			local temp = gps_utils.split(capture_text, "%.")
 			local ret = ""
 			for i = 1, #temp-1  do
-				ret = ret..config.icons["container-name"]..temp[i]..config.separator
+				ret = ret..current_symbols.icons["container-name"]..temp[i]..current_symbols.separator
 			end
-			return ret..config.icons["function-name"]..temp[#temp]
+			return ret..current_symbols.icons["function-name"]..temp[#temp]
 		else
 			return default_transform(capture_name, capture_text)
 		end
 	end,
 	["python"] = function(capture_name, capture_text)
 		if capture_name == "main-function" then
-			return config.icons["function-name"].."main"
+			return current_symbols.icons["function-name"].."main"
 		else
 			return default_transform(capture_name, capture_text)
 		end
@@ -113,6 +144,7 @@ function M.setup(user_config)
 				config.icons[k] = v
 			end
 		end
+
 		if user_config.languages then
 			for k, v in pairs(user_config.languages) do
 				if config.languages[k] then
@@ -120,8 +152,31 @@ function M.setup(user_config)
 				end
 			end
 		end
+
 		if user_config.separator ~= nil then
 			config.separator = user_config.separator
+		end
+
+		if user_config.lang_specific ~= nil then
+			local lang_specific = user_config.lang_specific
+
+			for lang, override in pairs(lang_specific) do
+				if config.lang_specific[lang] == nil then
+					config.lang_specific[lang] = {
+						icons = {}
+					}
+				end
+
+				if override.icons ~= nil then
+					for k, v in pairs(override.icons) do
+						config.lang_specific[lang].icons[k] = v
+					end
+				end
+
+				if override.separator ~= nil then
+					config.lang_specific[lang].separator = override.separator
+				end
+			end
 		end
 	end
 
@@ -141,6 +196,11 @@ function M.get_location()
 	end
 
 	local filelang = ts_parsers.ft_to_lang(vim.bo.filetype)
+
+	if current_symbols.lang ~= filelang then
+		update_icons(filelang)
+	end
+
 	local gps_query = ts_queries.get_query(filelang, "nvimGPS")
 	local transform = transform_lang[filelang]
 
@@ -182,7 +242,7 @@ function M.get_location()
 		node = node:parent()
 	end
 
-	cache_value = table.concat(node_text, config.separator)
+	cache_value = table.concat(node_text, current_symbols.separator)
 	return cache_value
 end
 
