@@ -52,10 +52,8 @@ local function default_transform(capture_name, capture_text)
 end
 
 local function update_icons(filelang)
-	current_symbols.lang = filelang
-
 	-- Reset to default
-	current_symbols.icons = config.icons
+	current_symbols.icons = gps_utils.deepcopy(config.icons)
 	current_symbols.separator = config.separator
 
 	-- Override
@@ -73,6 +71,8 @@ local function update_icons(filelang)
 			current_symbols.separator = lang_specific[filelang].separator
 		end
 	end
+
+	current_symbols.lang = filelang
 end
 
 local transform_lang = {
