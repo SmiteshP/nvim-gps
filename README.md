@@ -72,6 +72,7 @@ nvim-gps provides a `setup` function that takes in a table with configuration op
 
 -- Example config
 require("nvim-gps").setup({
+	-- Default icons
 	icons = {
 		["class-name"] = ' ',      -- Classes and class-like objects
 		["function-name"] = ' ',   -- Functions
@@ -79,12 +80,23 @@ require("nvim-gps").setup({
 		["container-name"] = '⛶ ',  -- Containers (example: lua tables)
 		["tag-name"] = '炙'         -- Tags (example: html tags)
 	},
+	-- Customize icons and separator for languages
+	-- These override the default icons and separator for the language
+	lang_specific = {
+		--["cpp"] = {
+		--	icons = {
+		--		["function-name"] = "fn "
+		--	},
+		--	seperator = " -> "
+		--}
+	},
 	-- Disable any languages individually over here
 	-- Any language not disabled here is enabled by default
 	languages = {
 		-- ["bash"] = false,
 		-- ["go"] = false,
 	},
+	-- Default separator
 	separator = ' > ',
 })
 ```
