@@ -53,7 +53,7 @@ local transform_lang = {
 				local text = string.match(temp[i], "%s*([%w_]*)%s*<?.*>?%s*")
 	 			ret = ret..config.icons["class-name"]..text..config.separator
 			end
-			return ret..config.icons["method-name"]..string.match(temp[#temp], "%s*([%w_]*)%s*")
+			return ret..config.icons["method-name"]..string.match(temp[#temp], "%s*(~?%s*[%w_]*)%s*")
 		else
 			return default_transform(capture_name, capture_text)
 		end
