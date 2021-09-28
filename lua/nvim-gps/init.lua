@@ -61,7 +61,7 @@ local transform_lang = {
 	["html"] = function(capture_name, capture_text)
 		if capture_name == "tag-name" then
 			local text = string.match(capture_text, "<(.*)>")
-			local tag_name, attributes = string.match(text, "(%w+)(.*)")
+			local tag_name, attributes = string.match(text, "([%w-]+)(.*)")
 			local ret = tag_name
 			local id_name = string.match(attributes, "id%s*=%s*%\"([^%s]+)%\"")
 			if id_name ~= nil then
@@ -170,17 +170,17 @@ function M.get_location()
 					capture_ID, capture_node = iter()
 				end
 				local capture_name = gps_query.captures[capture_ID]
-				table.insert(node_text, 1, transform(capture_name, ts_utils.get_node_text(capture_node)[1]))
+				table.insert(node_text, 1, transform(capture_name, table.concat(ts_utils.get_node_text(capture_node), ' ')))
 
 			elseif gps_query.captures[capture_ID] == "scope-root-2" then
 
 				capture_ID, capture_node = iter()
 				local capture_name = gps_query.captures[capture_ID]
-				table.insert(node_text, 1, transform(capture_name, ts_utils.get_node_text(capture_node)[1]))
+				table.insert(node_text, 1, transform(capture_name, table.concat(ts_utils.get_node_text(capture_node), ' ')))
 
 				capture_ID, capture_node = iter()
 				capture_name = gps_query.captures[capture_ID]
-				table.insert(node_text, 2, transform(capture_name, ts_utils.get_node_text(capture_node)[1]))
+				table.insert(node_text, 2, transform(capture_name, table.concat(ts_utils.get_node_text(capture_node), ' ')))
 
 			end
 		end
