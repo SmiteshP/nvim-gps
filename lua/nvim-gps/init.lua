@@ -46,8 +46,14 @@ end
 
 local transform_lang = {
 	["cpp"] = function(capture_name, capture_text)
-		if capture_name == "multi-class-name" then
-			return config.icons["class-name"]..string.gsub(capture_text, "%s*%:%:%s*", config.separator..config.icons["class-name"])
+		if capture_name == "multi-class-method" then
+			local temp = gps_utils.split(capture_text, "%:%:")
+			local ret = ""
+			for i = 1, #temp-1  do
+				local text = string.match(temp[i], "%s*([%w_]*)%s*<?.*>?%s*")
+	 			ret = ret..config.icons["class-name"]..text..config.separator
+			end
+			return ret..config.icons["method-name"]..string.match(temp[#temp], "%s*([%w_]*)%s*")
 		else
 			return default_transform(capture_name, capture_text)
 		end
