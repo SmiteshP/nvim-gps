@@ -40,22 +40,3 @@
 	declarator: (function_declarator
 		declarator: (qualified_identifier) @multi-class-method)) @scope-root)
 
-; Method written outside class
-; ((function_definition
-; 	declarator: (function_declarator
-; 		declarator: (scoped_identifier
-; 			namespace: [
-; 				(namespace_identifier) @class-name
-; 				(scoped_namespace_identifier) @multi-class-name
-; 				(template_type
-; 					(scoped_type_identifier) @multi-class-name)
-; 				]
-; 			name: (identifier) @method-name))) @scope-root-2)
-
-; Method written outside a template class
-; ((function_definition
-; 	declarator: (function_declarator
-; 		declarator: (qualified_identifier
-; 			scope: (template_type
-; 				name: (type_identifier) @class-name)
-; 			name: (identifier) @function-name))) @scope-root-2)
