@@ -79,11 +79,24 @@ require("nvim-gps").setup({
 		["container-name"] = '⛶ ',  -- Containers (example: lua tables)
 		["tag-name"] = '炙'         -- Tags (example: html tags)
 	},
-	-- Disable any languages individually over here
+	-- Add custom configuration per language or
+	-- Disable the plugin for a language
 	-- Any language not disabled here is enabled by default
 	languages = {
-		-- ["bash"] = false,
-		-- ["go"] = false,
+		-- ["bash"] = false, -- disables nvim-gps for bash
+		-- ["go"] = false, -- disables nvim-gps for bash
+		-- ["ruby"] = {
+			separator = '|', -- Overrides default separator with '|'
+			icons = {
+				-- Default icons not specified in the lang config
+				-- will fallback to the default value
+				-- "container-name" will fallback to default because it's not set
+				["function-name"] = '',    -- to ensure empty values, set an empty string
+				["tag-name"] = ''
+				["class-name"] = '::',
+				["method-name"] = '#',
+			}
+		}
 	},
 	separator = ' > ',
 })

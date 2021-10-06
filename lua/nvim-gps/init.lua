@@ -5,7 +5,9 @@ local gps_utils = require("nvim-gps.utils")
 
 local M = {}
 
-local config = {
+-- Default configuration that can be overridden by users
+local default_config = {
+	enabled = true,
 	icons = {
 		["class-name"] = ' ',
 		["function-name"] = ' ',
@@ -13,52 +15,53 @@ local config = {
 		["container-name"] = '⛶ ',
 		["tag-name"] = '炙'
 	},
-	languages = {
-		["bash"] = true,       -- bash and zsh
-		["c"] = true,
-		["cpp"] = true,
-		["elixir"] = true,
-		["fennel"] = true,
-		["go"] = true,
-		["html"] = true,
-		["java"] = true,
-		["jsx"] = true,
-		["javascript"] = true,
-		["lua"] = true,
-		["ocaml"] = true,
-		["python"] = true,
-		["ruby"] = true,
-		["rust"] = true,
-		["tsx"] = true,
-		["typescript"] = true,
-	},
 	separator = ' > ',
 }
+
+-- Languages specific default configuration must be added to configs
+-- using the `with_default_config` helper.
+--
+-- Example
+--
+--    local configs = {
+--        ["cpp"] = with_default_config({
+--            icons = {
+--                ["function-name"] = "<F> "
+--            }
+--        })
+--    }
+local with_default_config = function(config)
+	return vim.tbl_deep_extend('force', default_config, config)
+end
+-- Placeholder where the configuration will be saved in setup()
+local configs = {}
 
 local cache_value = ""
 local setup_complete = false
 
-local function default_transform(capture_name, capture_text)
+local function default_transform(config, capture_name, capture_text)
 	if config.icons[capture_name] ~= nil then
 		return config.icons[capture_name] .. capture_text
+	else
+		return capture_text
 	end
 end
 
 local transform_lang = {
-	["cpp"] = function(capture_name, capture_text)
+	["cpp"] = function(config, capture_name, capture_text)
 		if capture_name == "multi-class-method" then
 			local temp = gps_utils.split(capture_text, "%:%:")
 			local ret = ""
 			for i = 1, #temp-1  do
 				local text = string.match(temp[i], "%s*([%w_]*)%s*<?.*>?%s*")
-	 			ret = ret..config.icons["class-name"]..text..config.separator
+				ret = ret..config.icons["class-name"]..text..config.separator
 			end
 			return ret..config.icons["method-name"]..string.match(temp[#temp], "%s*(~?%s*[%w_]*)%s*")
 		else
-			return default_transform(capture_name, capture_text)
+			return default_transform(config, capture_name, capture_text)
 		end
 	end,
-	["html"] = function(capture_name, capture_text)
+	["html"] = function(config, capture_name, capture_text)
 		if capture_name == "tag-name" then
 			local text = string.match(capture_text, "<(.*)>")
 			local tag_name, attributes = string.match(text, "([%w-]+)(.*)")
@@ -74,7 +77,7 @@ local transform_lang = {
 			return config.icons["tag-name"]..ret
 		end
 	end,
-	["lua"] = function(capture_name, capture_text)
+	["lua"] = function(config, capture_name, capture_text)
 		if capture_name == "string-method" then
 			return config.icons["method-name"]..string.match(capture_text, "[\"\'](.*)[\"\']")
 		elseif capture_name == "multi-container" then
@@ -87,49 +90,68 @@ local transform_lang = {
 			end
 			return ret..config.icons["function-name"]..temp[#temp]
 		else
-			return default_transform(capture_name, capture_text)
+			return default_transform(config, capture_name, capture_text)
 		end
 	end,
-	["python"] = function(capture_name, capture_text)
+	["python"] = function(config, capture_name, capture_text)
 		if capture_name == "main-function" then
 			return config.icons["function-name"].."main"
 		else
-			return default_transform(capture_name, capture_text)
+			return default_transform(config, capture_name, capture_text)
 		end
 	end
 }
+-- If a language doesn't have a transformation
+-- fallback to the default_transform
+setmetatable(transform_lang, {
+	__index = function()
+		return default_transform
+	end
+})
 
+-- Checks the availability of the plugin for the current buffer
+-- The availability is cached in a buffer variable (b:nvim_gps_available)
 function M.is_available()
-	return setup_complete and (config.languages[ts_parsers.ft_to_lang(vim.bo.filetype)] == true)
+	if vim.b.nvim_gps_available == nil then
+		local filelang = ts_parsers.ft_to_lang(vim.bo.filetype)
+		local config = configs[filelang]
+
+		if config.enabled then
+			local has_parser = ts_parsers.has_parser(filelang)
+			local has_query = ts_queries.has_query_files(filelang, "nvimGPS")
+
+			vim.b.nvim_gps_available = setup_complete and has_parser and has_query
+		else
+			vim.b.nvim_gps_available = false
+		end
+	end
+
+	return vim.b.nvim_gps_available
 end
 
+-- Enables the treesitter nvimGPS module and loads the user configuration, or fallback to the
+-- default_config.
 function M.setup(user_config)
-	-- By default enable all languages
-	for k, _ in pairs(config.languages) do
-		config.languages[k] = ts_parsers.has_parser(k)
-		if transform_lang[k] == nil then
-			transform_lang[k] = default_transform
+	-- Override default configurations with user definitions
+	user_config = user_config or {}
+	default_config.separator = user_config['separator'] or default_config.separator
+	default_config.icons = vim.tbl_extend('force', default_config.icons, user_config['icons'] or {})
+
+	-- Override languages specific configurations with user definitions
+	for lang, values in pairs(user_config.languages or {}) do
+		if type(values) == 'table' then
+			configs[lang] = with_default_config(values)
+		else
+			configs[lang] = with_default_config({ enabled = values })
 		end
 	end
 
-	-- Override default with user settings
-	if user_config then
-		if user_config.icons then
-			for k, v in pairs(user_config.icons) do
-				config.icons[k] = v
-			end
+	-- If a language doesn't have a configuration, fallback to the default_config
+	setmetatable(configs, {
+		__index = function()
+			return default_config
 		end
-		if user_config.languages then
-			for k, v in pairs(user_config.languages) do
-				if config.languages[k] then
-					config.languages[k] = v
-				end
-			end
-		end
-		if user_config.separator ~= nil then
-			config.separator = user_config.separator
-		end
-	end
+	})
 
 	require("nvim-treesitter.configs").setup({
 		nvimGPS = {
@@ -149,6 +171,7 @@ function M.get_location()
 	local filelang = ts_parsers.ft_to_lang(vim.bo.filetype)
 	local gps_query = ts_queries.get_query(filelang, "nvimGPS")
 	local transform = transform_lang[filelang]
+	local config = configs[filelang]
 
 	if not gps_query then
 		return "error"
@@ -170,17 +193,17 @@ function M.get_location()
 					capture_ID, capture_node = iter()
 				end
 				local capture_name = gps_query.captures[capture_ID]
-				table.insert(node_text, 1, transform(capture_name, table.concat(ts_utils.get_node_text(capture_node), ' ')))
+				table.insert(node_text, 1, transform(config, capture_name, table.concat(ts_utils.get_node_text(capture_node), ' ')))
 
 			elseif gps_query.captures[capture_ID] == "scope-root-2" then
 
 				capture_ID, capture_node = iter()
 				local capture_name = gps_query.captures[capture_ID]
-				table.insert(node_text, 1, transform(capture_name, table.concat(ts_utils.get_node_text(capture_node), ' ')))
+				table.insert(node_text, 1, transform(config, capture_name, table.concat(ts_utils.get_node_text(capture_node), ' ')))
 
 				capture_ID, capture_node = iter()
 				capture_name = gps_query.captures[capture_ID]
-				table.insert(node_text, 2, transform(capture_name, table.concat(ts_utils.get_node_text(capture_node), ' ')))
+				table.insert(node_text, 2, transform(config, capture_name, table.concat(ts_utils.get_node_text(capture_node), ' ')))
 
 			end
 		end
