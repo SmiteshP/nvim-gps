@@ -64,13 +64,21 @@ Plug "SmiteshP/nvim-gps"
 ## ⚙️ Configuration
 
 nvim-gps provides a `setup` function that takes in a table with configuration options.
+The default configuration assumes that you are using a nerd font.
 
 > Note: `setup` function needs to be called once for nvim-gps to work.
 
 ```lua
 -- Lua
 
--- Example config
+-- Default config
+require("nvim-gps").setup()
+```
+
+```lua
+-- Lua
+
+-- Customized config
 require("nvim-gps").setup({
 	icons = {
 		["class-name"] = ' ',      -- Classes and class-like objects
@@ -86,17 +94,17 @@ require("nvim-gps").setup({
 		-- ["bash"] = false, -- disables nvim-gps for bash
 		-- ["go"] = false, -- disables nvim-gps for bash
 		-- ["ruby"] = {
-			separator = '|', -- Overrides default separator with '|'
-			icons = {
-				-- Default icons not specified in the lang config
-				-- will fallback to the default value
-				-- "container-name" will fallback to default because it's not set
-				["function-name"] = '',    -- to ensure empty values, set an empty string
-				["tag-name"] = ''
-				["class-name"] = '::',
-				["method-name"] = '#',
-			}
-		}
+		--	separator = '|', -- Overrides default separator with '|'
+		--	icons = {
+		--		-- Default icons not specified in the lang config
+		--		-- will fallback to the default value
+		--		-- "container-name" will fallback to default because it's not set
+		--		["function-name"] = '',    -- to ensure empty values, set an empty string
+		--		["tag-name"] = ''
+		--		["class-name"] = '::',
+		--		["method-name"] = '#',
+		--	}
+		--}
 	},
 	separator = ' > ',
 })
