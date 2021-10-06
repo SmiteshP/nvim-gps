@@ -92,7 +92,7 @@ require("nvim-gps").setup({
 	-- Any language not disabled here is enabled by default
 	languages = {
 		-- ["bash"] = false, -- disables nvim-gps for bash
-		-- ["go"] = false, -- disables nvim-gps for bash
+		-- ["go"] = false,   -- disables nvim-gps for golang
 		-- ["ruby"] = {
 		--	separator = '|', -- Overrides default separator with '|'
 		--	icons = {
