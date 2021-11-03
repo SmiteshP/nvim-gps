@@ -131,12 +131,14 @@ Few examples below
 
 ```lua
 -- Lua
-table.insert(components.left.active, {
+local gps = require("nvim-gps")
+
+table.insert(components.active[1], {
 	provider = function()
-		return require("nvim-gps").get_location()
+		return gps.get_location()
 	end,
 	enabled = function()
-		return require("nvim-gps").is_available()
+		return gps.is_available()
 	end
 })
 ```
