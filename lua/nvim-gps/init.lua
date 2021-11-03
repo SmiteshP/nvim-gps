@@ -16,6 +16,8 @@ local default_config = {
 		["tag-name"] = '炙'
 	},
 	separator = ' > ',
+	depth = 0,
+	depth_limit_indicator = ".."
 }
 
 -- Languages specific default configuration must be added to configs
@@ -134,12 +136,14 @@ end
 function M.setup(user_config)
 	-- Override default configurations with user definitions
 	user_config = user_config or {}
-	default_config.separator = user_config['separator'] or default_config.separator
-	default_config.icons = vim.tbl_extend('force', default_config.icons, user_config['icons'] or {})
+	default_config.separator = user_config.separator or default_config.separator
+	default_config.icons = vim.tbl_extend("force", default_config.icons, user_config["icons"] or {})
+	default_config.depth = user_config.depth or default_config.depth
+	default_config.depth_limit_indicator = user_config.depth_limit_indicator or default_config.depth_limit_indicator
 
 	-- Override languages specific configurations with user definitions
 	for lang, values in pairs(user_config.languages or {}) do
-		if type(values) == 'table' then
+		if type(values) == "table" then
 			configs[lang] = with_default_config(values)
 		else
 			configs[lang] = with_default_config({ enabled = values })
@@ -211,7 +215,17 @@ function M.get_location()
 		node = node:parent()
 	end
 
-	cache_value = table.concat(node_text, config.separator)
+	local context = table.concat(node_text, config.separator)
+
+	if config.depth ~= 0 then
+		local parts = vim.split(context, config.separator, true)
+		if #parts > config.depth then
+			local sliced = vim.list_slice(parts, #parts-config.depth+1, #parts)
+			context = config.depth_limit_indicator .. config.separator .. table.concat(sliced, config.separator)
+		end
+	end
+
+	cache_value = context
 	return cache_value
 end
 
