@@ -33,6 +33,7 @@ Here is a example of how it can look in a fully configured statusline
 * Ruby
 * Rust
 * Typescript (and tsx)
+* Verilog
 
 ## ⚡️ Requirements
 
@@ -80,6 +81,7 @@ require("nvim-gps").setup()
 
 -- Customized config
 require("nvim-gps").setup({
+
 	icons = {
 		["class-name"] = ' ',      -- Classes and class-like objects
 		["function-name"] = ' ',   -- Functions
@@ -87,12 +89,23 @@ require("nvim-gps").setup({
 		["container-name"] = '⛶ ',  -- Containers (example: lua tables)
 		["tag-name"] = '炙'         -- Tags (example: html tags)
 	},
+
 	-- Add custom configuration per language or
 	-- Disable the plugin for a language
 	-- Any language not disabled here is enabled by default
 	languages = {
+		-- Some languages have custom icons
+		["verilog"] = {
+			icons = {
+				["module-name"] = ' '
+			}
+		}
+
+		-- Disable for particular languages
 		-- ["bash"] = false, -- disables nvim-gps for bash
 		-- ["go"] = false,   -- disables nvim-gps for golang
+
+		-- Override default setting for particular languages
 		-- ["ruby"] = {
 		--	separator = '|', -- Overrides default separator with '|'
 		--	icons = {
@@ -106,12 +119,15 @@ require("nvim-gps").setup({
 		--	}
 		--}
 	},
+
 	separator = ' > ',
+
 	-- limit for amount of context shown
 	-- 0 means no limit
 	-- Note: to make use of depth feature properly, make sure your separator isn't something that can appear
 	-- in context names (eg: function names, class names, etc)
 	depth = 0,
+
 	-- indicator used when context is hits depth limit
 	depth_limit_indicator = ".."
 })
