@@ -36,7 +36,13 @@ local with_default_config = function(config)
 	return vim.tbl_deep_extend('force', default_config, config)
 end
 -- Placeholder where the configuration will be saved in setup()
-local configs = {}
+local configs = {
+	["verilog"] = with_default_config({
+		icons = {
+			["module-name"] = ' '
+		}
+	})
+}
 
 local cache_value = ""
 local setup_complete = false
