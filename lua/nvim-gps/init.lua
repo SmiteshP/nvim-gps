@@ -37,6 +37,16 @@ local with_default_config = function(config)
 end
 -- Placeholder where the configuration will be saved in setup()
 local configs = {
+	["json"] = with_default_config({
+		icons = {
+			["array-name"] = ' ',
+			["object-name"] = ' ',
+			["null-name"] = '[] ',
+			["boolean-name"] = 'ﰰﰴ ',
+			["number-name"] = '# ',
+			["string-name"] = ' '
+		}
+	}),
 	["verilog"] = with_default_config({
 		icons = {
 			["module-name"] = ' '

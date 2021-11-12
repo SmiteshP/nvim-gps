@@ -27,6 +27,7 @@ Here is a example of how it can look in a fully configured statusline
 * Html
 * Java
 * Javascript (and jsx)
+* JSON
 * Lua
 * Ocaml
 * Python
@@ -95,6 +96,16 @@ require("nvim-gps").setup({
 	-- Any language not disabled here is enabled by default
 	languages = {
 		-- Some languages have custom icons
+		["json"] = {
+			icons = {
+				["array-name"] = ' ',
+				["object-name"] = ' ',
+				["null-name"] = '[] ',
+				["boolean-name"] = 'ﰰﰴ ',
+				["number-name"] = '# ',
+				["string-name"] = ' '
+			}
+		},
 		["verilog"] = {
 			icons = {
 				["module-name"] = ' '
