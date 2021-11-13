@@ -22,10 +22,11 @@ local default_config = {
 
 -- Languages specific default configuration must be added to configs
 -- using the `with_default_config` helper.
+-- In setup_language_configs function
 --
 -- Example
 --
---    local configs = {
+--    configs = {
 --        ["cpp"] = with_default_config({
 --            icons = {
 --                ["function-name"] = "<F> "
@@ -33,26 +34,31 @@ local default_config = {
 --        })
 --    }
 local with_default_config = function(config)
-	return vim.tbl_deep_extend('force', default_config, config)
+	return vim.tbl_deep_extend("force", default_config, config)
 end
+
 -- Placeholder where the configuration will be saved in setup()
-local configs = {
-	["json"] = with_default_config({
-		icons = {
-			["array-name"] = ' ',
-			["object-name"] = ' ',
-			["null-name"] = '[] ',
-			["boolean-name"] = 'ﰰﰴ ',
-			["number-name"] = '# ',
-			["string-name"] = ' '
-		}
-	}),
-	["verilog"] = with_default_config({
-		icons = {
-			["module-name"] = ' '
-		}
-	})
-}
+local configs = {}
+
+local function setup_language_configs()
+	configs = {
+		["json"] = with_default_config({
+			icons = {
+				["array-name"] = ' ',
+				["object-name"] = ' ',
+				["null-name"] = '[] ',
+				["boolean-name"] = 'ﰰﰴ ',
+				["number-name"] = '# ',
+				["string-name"] = ' '
+			}
+		}),
+		["verilog"] = with_default_config({
+			icons = {
+				["module-name"] = ' '
+			}
+		})
+	}
+end
 
 local cache_value = ""
 local setup_complete = false
@@ -156,6 +162,8 @@ function M.setup(user_config)
 	default_config.icons = vim.tbl_extend("force", default_config.icons, user_config["icons"] or {})
 	default_config.depth = user_config.depth or default_config.depth
 	default_config.depth_limit_indicator = user_config.depth_limit_indicator or default_config.depth_limit_indicator
+
+	setup_language_configs()
 
 	-- Override languages specific configurations with user definitions
 	for lang, values in pairs(user_config.languages or {}) do
