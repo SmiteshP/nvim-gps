@@ -33,6 +33,7 @@ Here is a example of how it can look in a fully configured statusline
 * Python
 * Ruby
 * Rust
+* TOML
 * Typescript (and tsx)
 * Verilog
 
@@ -104,6 +105,20 @@ require("nvim-gps").setup({
 				["boolean-name"] = 'ﰰﰴ ',
 				["number-name"] = '# ',
 				["string-name"] = ' '
+			}
+		},
+		["toml"] = {
+			icons = {
+				["table-name"] = ' ',
+				["array-name"] = ' ',
+				["boolean-name"] = 'ﰰﰴ ',
+				["date-name"] = ' ',
+				["date-time-name"] = ' ',
+				["float-name"] = ' ',
+				["inline-table-name"] = ' ',
+				["integer-name"] = '# ',
+				["string-name"] = ' ',
+				["time-name"] = ' '
 			}
 		},
 		["verilog"] = {

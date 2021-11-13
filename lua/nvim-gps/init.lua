@@ -52,6 +52,20 @@ local function setup_language_configs()
 				["string-name"] = ' '
 			}
 		}),
+		["toml"] = with_default_config({
+			icons = {
+				["table-name"] = ' ',
+				["array-name"] = ' ',
+				["boolean-name"] = 'ﰰﰴ ',
+				["date-name"] = ' ',
+				["date-time-name"] = ' ',
+				["float-name"] = ' ',
+				["inline-table-name"] = ' ',
+				["integer-name"] = '# ',
+				["string-name"] = ' ',
+				["time-name"] = ' '
+			}
+		}),
 		["verilog"] = with_default_config({
 			icons = {
 				["module-name"] = ' '
