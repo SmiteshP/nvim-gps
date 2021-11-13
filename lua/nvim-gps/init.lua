@@ -56,7 +56,18 @@ local function setup_language_configs()
 			icons = {
 				["module-name"] = ' '
 			}
-		})
+		}),
+		["yaml"] = with_default_config({
+			icons = {
+				["mapping-name"] = ' ',
+				["sequence-name"] = ' ',
+				["null-name"] = '[] ',
+				["boolean-name"] = 'ﰰﰴ ',
+				["integer-name"] = '# ',
+				["float-name"] = ' ',
+				["string-name"] = ' '
+			}
+		}),
 	}
 end
 
