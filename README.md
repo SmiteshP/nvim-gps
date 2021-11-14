@@ -35,6 +35,7 @@ Here is a example of how it can look in a fully configured statusline
 * Rust
 * Typescript (and tsx)
 * Verilog
+* YAML
 
 ## ⚡️ Requirements
 
@@ -110,7 +111,18 @@ require("nvim-gps").setup({
 			icons = {
 				["module-name"] = ' '
 			}
-		}
+		},
+		["yaml"] = {
+			icons = {
+				["mapping-name"] = ' ',
+				["sequence-name"] = ' ',
+				["null-name"] = '[] ',
+				["boolean-name"] = 'ﰰﰴ ',
+				["integer-name"] = '# ',
+				["float-name"] = ' ',
+				["string-name"] = ' '
+			}
+		},
 
 		-- Disable for particular languages
 		-- ["bash"] = false, -- disables nvim-gps for bash
