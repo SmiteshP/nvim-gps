@@ -103,9 +103,9 @@ local transform_lang = {
 			local ret = ""
 			for i = 1, #temp-1  do
 				local text = string.match(temp[i], "%s*([%w_]*)%s*<?.*>?%s*")
-				ret = ret..config.icons["class-name"]..text..config.separator
+				ret = ret..default_transform(config, "class-name", text)..config.separator
 			end
-			return ret..config.icons["method-name"]..string.match(temp[#temp], "%s*(~?%s*[%w_]*)%s*")
+			return ret..default_transform(config, "method-name", string.match(temp[#temp], "%s*(~?%s*[%w_]*)%s*"))
 		else
 			return default_transform(config, capture_name, capture_text)
 		end
@@ -123,28 +123,28 @@ local transform_lang = {
 			if class_name ~= nil then
 				ret = ret..'.'..string.gsub(class_name, "%s+", '.')
 			end
-			return config.icons["tag-name"]..ret
+			return default_transform(config, "tag-name", ret)
 		end
 	end,
 	["lua"] = function(config, capture_name, capture_text)
 		if capture_name == "string-method" then
-			return config.icons["method-name"]..string.match(capture_text, "[\"\'](.*)[\"\']")
+			return default_transform(config, "method-name", string.match(capture_text, "[\"\'](.*)[\"\']"))
 		elseif capture_name == "multi-container" then
-			return config.icons["container-name"]..string.gsub(capture_text, "%.", config.separator..config.icons["container-name"])
+			return default_transform(config, "container-name", string.gsub(capture_text, "%.", config.separator..default_transform(config, "container-name", '')))
 		elseif capture_name == "table-function" then
 			local temp = gps_utils.split(capture_text, "%.")
 			local ret = ""
 			for i = 1, #temp-1  do
-				ret = ret..config.icons["container-name"]..temp[i]..config.separator
+				ret = ret..default_transform(config, "container-name", temp[i])..config.separator
 			end
-			return ret..config.icons["function-name"]..temp[#temp]
+			return ret..default_transform(config, "function-name", temp[#temp])
 		else
 			return default_transform(config, capture_name, capture_text)
 		end
 	end,
 	["python"] = function(config, capture_name, capture_text)
 		if capture_name == "main-function" then
-			return config.icons["function-name"].."main"
+			return default_transform(config, "function-name", "main")
 		else
 			return default_transform(config, capture_name, capture_text)
 		end
@@ -184,11 +184,14 @@ function M.setup(user_config)
 	-- Override default configurations with user definitions
 	user_config = user_config or {}
 	default_config.separator = user_config.separator or default_config.separator
-	default_config.icons = vim.tbl_extend("force", default_config.icons, user_config["icons"] or {})
+	if user_config.disable_icons then
+		default_config.icons = {}
+	else
+		default_config.icons = vim.tbl_extend("force", default_config.icons, user_config["icons"] or {})
+		setup_language_configs()
+	end
 	default_config.depth = user_config.depth or default_config.depth
 	default_config.depth_limit_indicator = user_config.depth_limit_indicator or default_config.depth_limit_indicator
-
-	setup_language_configs()
 
 	-- Override languages specific configurations with user definitions
 	for lang, values in pairs(user_config.languages or {}) do
