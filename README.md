@@ -85,7 +85,7 @@ require("nvim-gps").setup()
 -- Customized config
 require("nvim-gps").setup({
 
-	disable_icons = false           -- Setting it to true will disable all icons
+	disable_icons = false,           -- Setting it to true will disable all icons
 
 	icons = {
 		["class-name"] = ' ',      -- Classes and class-like objects
