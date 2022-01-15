@@ -12,7 +12,7 @@ local default_config = {
 		["class-name"] = ' ',
 		["function-name"] = ' ',
 		["method-name"] = ' ',
-		["container-name"] = 'ﮅ ',
+		["container-name"] = '⁦ﮅ⁩ ',
 		["tag-name"] = '炙'
 	},
 	separator = ' > ',
