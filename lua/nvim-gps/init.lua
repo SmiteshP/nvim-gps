@@ -118,10 +118,11 @@ local transform_lang = {
 			local id_name = string.match(attributes, "id%s*=%s*%\"([^%s]+)%\"")
 			if id_name ~= nil then
 				ret = ret..'#'..id_name
-			end
-			local class_name = string.match(attributes, "class%s*=%s*%\"([%w-_%s]+)%\"")
-			if class_name ~= nil then
-				ret = ret..'.'..string.gsub(class_name, "%s+", '.')
+			else
+				local class_name = string.match(attributes, "class%s*=%s*%\"([%w-_%s]+)%\"")
+				if class_name ~= nil then
+					ret = ret..'.'..string.match(class_name, "(%w+)")
+				end
 			end
 			return default_transform(config, "tag-name", ret)
 		end
