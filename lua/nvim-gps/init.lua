@@ -219,6 +219,14 @@ function M.setup(user_config)
 	setup_complete = true
 end
 
+-- Request treesitter parser to update the syntax tree,
+-- when the buffer content has changed.
+local update_tree = ts_utils.memoize_by_buf_tick(function(bufnr)
+	local filelang = ts_parsers.ft_to_lang(vim.api.nvim_buf_get_option(bufnr, 'filetype'))
+	local parser = ts_parsers.get_parser(bufnr, filelang)
+	return parser:parse()
+end)
+
 function M.get_location()
 	-- Inserting text cause error nodes
 	if vim.fn.mode() == 'i' then
@@ -233,6 +241,9 @@ function M.get_location()
 	if not gps_query then
 		return "error"
 	end
+
+	-- Request treesitter parser to update the syntax tree for the current buffer.
+	update_tree(vim.fn.bufnr())
 
 	local current_node = ts_utils.get_node_at_cursor()
 
