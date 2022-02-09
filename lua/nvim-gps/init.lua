@@ -227,7 +227,7 @@ local update_tree = ts_utils.memoize_by_buf_tick(function(bufnr)
 	return parser:parse()
 end)
 
-function M.get_location()
+function M.get_location(opts)
 	-- Inserting text cause error nodes
 	if vim.fn.mode() == 'i' then
 		return cache_value
@@ -279,13 +279,17 @@ function M.get_location()
 		node = node:parent()
 	end
 
-	local context = table.concat(node_text, config.separator)
+	local depth = opts.depth or config.depth
+	local separator = opts.separator or config.separator
+	local depth_limit_indicator = opts.depth_limit_indicator or config.depth_limit_indicator
 
-	if config.depth ~= 0 then
-		local parts = vim.split(context, config.separator, true)
-		if #parts > config.depth then
-			local sliced = vim.list_slice(parts, #parts-config.depth+1, #parts)
-			context = config.depth_limit_indicator .. config.separator .. table.concat(sliced, config.separator)
+	local context = table.concat(node_text, separator)
+
+	if depth ~= 0 then
+		local parts = vim.split(context, separator, true)
+		if #parts > depth then
+			local sliced = vim.list_slice(parts, #parts - depth + 1, #parts)
+			context = depth_limit_indicator .. separator .. table.concat(sliced, separator)
 		end
 	end
 

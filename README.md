@@ -200,6 +200,9 @@ table.insert(components.active[1], {
 	provider = function()
 		return gps.get_location()
 	end,
+	short_provider = function() -- truncates nvim-gps to depth 1 if it doesn't fit
+		return gps.get_location({ depth = 1 })
+	end,
 	enabled = function()
 		return gps.is_available()
 	end
