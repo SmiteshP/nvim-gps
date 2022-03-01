@@ -8,6 +8,7 @@ local M = {}
 -- Default configuration that can be overridden by users
 local default_config = {
 	enabled = true,
+	disable_icons = false,
 	icons = {
 		["class-name"] = ' ',
 		["function-name"] = ' ',
@@ -194,12 +195,9 @@ function M.setup(user_config)
 	-- Override default configurations with user definitions
 	user_config = user_config or {}
 	default_config.separator = user_config.separator or default_config.separator
-	if user_config.disable_icons then
-		default_config.icons = {}
-	else
-		default_config.icons = vim.tbl_extend("force", default_config.icons, user_config["icons"] or {})
-		setup_language_configs()
-	end
+	default_config.disable_icons = user_config.disable_icons or default_config.disable_icons
+	default_config.icons = vim.tbl_extend("force", default_config.icons, user_config["icons"] or {})
+	setup_language_configs()
 	default_config.depth = user_config.depth or default_config.depth
 	default_config.depth_limit_indicator = user_config.depth_limit_indicator or default_config.depth_limit_indicator
 
@@ -314,7 +312,11 @@ function M.get_location()
 
 	local context = {}
 	for _, v in pairs(data) do
-		table.insert(context, v.icon..v.text)
+		if not config.disable_icons then
+			table.insert(context, v.icon..v.text)
+		else
+			table.insert(context, v.text)
+		end
 	end
 	context = table.concat(context, config.separator)
 
