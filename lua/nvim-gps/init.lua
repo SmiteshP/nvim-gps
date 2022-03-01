@@ -301,7 +301,7 @@ function M.get_data()
 end
 
 -- Returns the pretty statusline component
-function M.get_location()
+function M.get_location(opts)
 	if vim.fn.mode() == 'i' then
 		return location_cache_value
 	end
@@ -310,21 +310,33 @@ function M.get_location()
 	local config = configs[filelang]
 	local data = M.get_data()
 
+	local depth = config.depth
+	local separator = config.separator
+	local disable_icons = config.disable_icons
+	local depth_limit_indicator = config.depth_limit_indicator
+
+	if opts ~= nil then
+		depth = opts.depth or config.depth
+		separator = opts.separator or config.separator
+		disable_icons = opts.disable_icons or config.disable_icons
+		depth_limit_indicator = opts.depth_limit_indicator or config.depth_limit_indicator
+	end
+
 	local context = {}
 	for _, v in pairs(data) do
-		if not config.disable_icons then
+		if not disable_icons then
 			table.insert(context, v.icon..v.text)
 		else
 			table.insert(context, v.text)
 		end
 	end
-	context = table.concat(context, config.separator)
+	context = table.concat(context, separator)
 
-	if config.depth ~= 0 then
-		local parts = vim.split(context, config.separator, true)
-		if #parts > config.depth then
-			local sliced = vim.list_slice(parts, #parts-config.depth+1, #parts)
-			context = config.depth_limit_indicator .. config.separator .. table.concat(sliced, config.separator)
+	if depth ~= 0 then
+		local parts = vim.split(context, separator, true)
+		if #parts > depth then
+			local sliced = vim.list_slice(parts, #parts-depth+1, #parts)
+			context = depth_limit_indicator .. separator .. table.concat(sliced, separator)
 		end
 	end
 
