@@ -186,7 +186,7 @@ gps.get_location()  -- Returns a string with context information
 ```
 
 <details>
-<summary> You can also pass optional arguments to `get_location` function to override options given in setup function </summary>
+<summary> You can also pass optional arguments to <code>get_location</code> function to override options given in setup function </summary>
 
 ```lua
 opts = {
@@ -209,7 +209,7 @@ gps.get_data()      -- Returns an intermediate representation of data (which is 
 ```
 
 <details>
-<summary> example output of `get_data` function </summary>
+<summary> example output of <code>get_data</code> function </summary>
 
 ```lua
  {
