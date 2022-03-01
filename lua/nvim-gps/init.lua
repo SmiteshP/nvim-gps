@@ -85,27 +85,29 @@ local function setup_language_configs()
 	}
 end
 
-local cache_value = ""
+local data_cache_value = ""
+local location_cache_value = ""
 local setup_complete = false
 
 local function default_transform(config, capture_name, capture_text)
-	if config.icons[capture_name] ~= nil then
-		return config.icons[capture_name] .. capture_text
-	else
-		return capture_text
-	end
+	return {
+		text = capture_text,
+		type = capture_name,
+		icon = config.icons[capture_name]
+	}
 end
 
 local transform_lang = {
 	["cpp"] = function(config, capture_name, capture_text)
 		if capture_name == "multi-class-method" then
 			local temp = gps_utils.split(capture_text, "%:%:")
-			local ret = ""
+			local ret = {}
 			for i = 1, #temp-1  do
 				local text = string.match(temp[i], "%s*([%w_]*)%s*<?.*>?%s*")
-				ret = ret..default_transform(config, "class-name", text)..config.separator
+				table.insert(ret, default_transform(config, "class-name", text))
 			end
-			return ret..default_transform(config, "method-name", string.match(temp[#temp], "%s*(~?%s*[%w_]*)%s*"))
+			table.insert(ret, default_transform(config, "method-name", string.match(temp[#temp], "%s*(~?%s*[%w_]*)%s*")))
+			return ret
 		else
 			return default_transform(config, capture_name, capture_text)
 		end
@@ -131,14 +133,20 @@ local transform_lang = {
 		if capture_name == "string-method" then
 			return default_transform(config, "method-name", string.match(capture_text, "[\"\'](.*)[\"\']"))
 		elseif capture_name == "multi-container" then
-			return default_transform(config, "container-name", string.gsub(capture_text, "%.", config.separator..default_transform(config, "container-name", '')))
+			local temp = gps_utils.split(capture_text, "%.")
+			local ret = {}
+			for i = 1, #temp do
+				table.insert(ret, default_transform(config, "container-name", temp[i]))
+			end
+			return ret
 		elseif capture_name == "table-function" then
 			local temp = gps_utils.split(capture_text, "%.")
-			local ret = ""
+			local ret = {}
 			for i = 1, #temp-1  do
-				ret = ret..default_transform(config, "container-name", temp[i])..config.separator
+				table.insert(ret, default_transform(config, "container-name", temp[i]))
 			end
-			return ret..default_transform(config, "function-name", temp[#temp])
+			table.insert(ret, default_transform(config, "function-name", temp[#temp]))
+			return ret
 		else
 			return default_transform(config, capture_name, capture_text)
 		end
@@ -151,6 +159,7 @@ local transform_lang = {
 		end
 	end
 }
+
 -- If a language doesn't have a transformation
 -- fallback to the default_transform
 setmetatable(transform_lang, {
@@ -227,10 +236,11 @@ local update_tree = ts_utils.memoize_by_buf_tick(function(bufnr)
 	return parser:parse()
 end)
 
-function M.get_location()
+-- returns the data in table format
+function M.get_data()
 	-- Inserting text cause error nodes
 	if vim.fn.mode() == 'i' then
-		return cache_value
+		return data_cache_value
 	end
 
 	local filelang = ts_parsers.ft_to_lang(vim.bo.filetype)
@@ -247,7 +257,7 @@ function M.get_location()
 
 	local current_node = ts_utils.get_node_at_cursor()
 
-	local node_text = {}
+	local node_data = {}
 	local node = current_node
 
 	while node do
@@ -261,17 +271,17 @@ function M.get_location()
 					capture_ID, capture_node = iter()
 				end
 				local capture_name = gps_query.captures[capture_ID]
-				table.insert(node_text, 1, transform(config, capture_name, table.concat(ts_utils.get_node_text(capture_node), ' ')))
+				table.insert(node_data, 1, transform(config, capture_name, table.concat(ts_utils.get_node_text(capture_node), ' ')))
 
 			elseif gps_query.captures[capture_ID] == "scope-root-2" then
 
 				capture_ID, capture_node = iter()
 				local capture_name = gps_query.captures[capture_ID]
-				table.insert(node_text, 1, transform(config, capture_name, table.concat(ts_utils.get_node_text(capture_node), ' ')))
+				table.insert(node_data, 1, transform(config, capture_name, table.concat(ts_utils.get_node_text(capture_node), ' ')))
 
 				capture_ID, capture_node = iter()
 				capture_name = gps_query.captures[capture_ID]
-				table.insert(node_text, 2, transform(config, capture_name, table.concat(ts_utils.get_node_text(capture_node), ' ')))
+				table.insert(node_data, 2, transform(config, capture_name, table.concat(ts_utils.get_node_text(capture_node), ' ')))
 
 			end
 		end
@@ -279,7 +289,34 @@ function M.get_location()
 		node = node:parent()
 	end
 
-	local context = table.concat(node_text, config.separator)
+	local data = {}
+	for _, v in pairs(node_data) do
+		if not vim.tbl_islist(v) then
+			table.insert(data, v)
+		else
+			vim.list_extend(data, v)
+		end
+	end
+
+	data_cache_value = data
+	return data_cache_value
+end
+
+-- Returns the pretty statusline component
+function M.get_location()
+	if vim.fn.mode() == 'i' then
+		return location_cache_value
+	end
+
+	local filelang = ts_parsers.ft_to_lang(vim.bo.filetype)
+	local config = configs[filelang]
+	local data = M.get_data()
+
+	local context = {}
+	for _, v in pairs(data) do
+		table.insert(context, v.icon..v.text)
+	end
+	context = table.concat(context, config.separator)
 
 	if config.depth ~= 0 then
 		local parts = vim.split(context, config.separator, true)
@@ -289,8 +326,8 @@ function M.get_location()
 		end
 	end
 
-	cache_value = context
-	return cache_value
+	location_cache_value = context
+	return location_cache_value
 end
 
 return M
