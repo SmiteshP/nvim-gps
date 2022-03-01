@@ -185,6 +185,31 @@ gps.is_available()  -- Returns boolean value indicating whether a output can be 
 gps.get_location()  -- Returns a string with context information
 ```
 
+These two functions should satisfy the needs of most users, however if you want the raw intermediate data for custom usage you can use the following function
+
+```lua
+gps.get_data()      -- Returns an intermediate representation of data (which is used by get_location)
+					-- Table of tables that contain 'text', 'type' and 'icon' for each context
+```
+
+<details>
+<summary> example output of `get_data` function </summary>
+```lua
+ {
+ 	{
+		text = "mystruct",
+		type = "class-name",
+		icon = " "
+	},
+	{
+		text = "sum",
+		type = "method-name",
+		icon = " "
+	}
+ }
+```
+</details>
+
 Few examples below
 
 ### [feline](https://github.com/famiu/feline.nvim)
