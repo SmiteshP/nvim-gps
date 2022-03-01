@@ -185,6 +185,22 @@ gps.is_available()  -- Returns boolean value indicating whether a output can be 
 gps.get_location()  -- Returns a string with context information
 ```
 
+<details>
+<summary> You can also pass optional arguments to `get_location` function to override options given in setup function </summary>
+
+```lua
+opts = {
+	disable_icons = false,
+	separator = ' > ',
+	depth = 0,
+	depth_limit_indicator = ".."
+}
+
+gps.get_location(opts)
+```
+
+</details>
+
 These two functions should satisfy the needs of most users, however if you want the raw intermediate data for custom usage you can use the following function
 
 ```lua
@@ -194,6 +210,7 @@ gps.get_data()      -- Returns an intermediate representation of data (which is 
 
 <details>
 <summary> example output of `get_data` function </summary>
+
 ```lua
  {
  	{
@@ -208,6 +225,7 @@ gps.get_data()      -- Returns an intermediate representation of data (which is 
 	}
  }
 ```
+
 </details>
 
 Few examples below
