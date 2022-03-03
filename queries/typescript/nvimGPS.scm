@@ -38,7 +38,8 @@
 			(string) @method-name
 			(arrow_function)))) @scope-root)
 
-; Arrow function methods
+; All public class properties
 ((public_field_definition
 	name: (property_identifier) @method-name
-	value: (arrow_function)) @scope-root)
+	value: (_)) @scope-root)
+
