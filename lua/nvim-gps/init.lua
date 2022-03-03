@@ -330,14 +330,17 @@ function M.get_location(opts)
 			table.insert(context, v.text)
 		end
 	end
+
+	local truncated = false
+	if depth ~= 0 and #context > depth then
+		context = vim.list_slice(context, #context-depth+1, #context)
+		truncated = true
+	end
+
 	context = table.concat(context, separator)
 
-	if depth ~= 0 then
-		local parts = vim.split(context, separator, true)
-		if #parts > depth then
-			local sliced = vim.list_slice(parts, #parts-depth+1, #parts)
-			context = depth_limit_indicator .. separator .. table.concat(sliced, separator)
-		end
+	if truncated then
+		context = depth_limit_indicator..separator..context
 	end
 
 	location_cache_value = context
