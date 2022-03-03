@@ -331,17 +331,12 @@ function M.get_location(opts)
 		end
 	end
 
-	local truncated = false
 	if depth ~= 0 and #context > depth then
 		context = vim.list_slice(context, #context-depth+1, #context)
-		truncated = true
+		table.insert(context, 1, depth_limit_indicator)
 	end
 
 	context = table.concat(context, separator)
-
-	if truncated then
-		context = depth_limit_indicator..separator..context
-	end
 
 	location_cache_value = context
 	return location_cache_value
