@@ -1,7 +1,6 @@
 local ts_utils = require("nvim-treesitter.ts_utils")
 local ts_parsers = require("nvim-treesitter.parsers")
 local ts_queries = require("nvim-treesitter.query")
-local gps_utils = require("nvim-gps.utils")
 
 local M = {}
 
@@ -101,7 +100,7 @@ end
 local transform_lang = {
 	["cpp"] = function(config, capture_name, capture_text)
 		if capture_name == "multi-class-method" then
-			local temp = gps_utils.split(capture_text, "%:%:")
+			local temp = vim.split(capture_text, "%:%:")
 			local ret = {}
 			for i = 1, #temp-1  do
 				local text = string.match(temp[i], "%s*([%w_]*)%s*<?.*>?%s*")
@@ -134,14 +133,14 @@ local transform_lang = {
 		if capture_name == "string-method" then
 			return default_transform(config, "method-name", string.match(capture_text, "[\"\'](.*)[\"\']"))
 		elseif capture_name == "multi-container" then
-			local temp = gps_utils.split(capture_text, "%.")
+			local temp = vim.split(capture_text, "%.")
 			local ret = {}
 			for i = 1, #temp do
 				table.insert(ret, default_transform(config, "container-name", temp[i]))
 			end
 			return ret
 		elseif capture_name == "table-function" then
-			local temp = gps_utils.split(capture_text, "%.")
+			local temp = vim.split(capture_text, "%.")
 			local ret = {}
 			for i = 1, #temp-1  do
 				table.insert(ret, default_transform(config, "container-name", temp[i]))
