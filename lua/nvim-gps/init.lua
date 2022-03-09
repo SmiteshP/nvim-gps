@@ -228,7 +228,7 @@ end
 -- Request treesitter parser to update the syntax tree,
 -- when the buffer content has changed.
 local update_tree = ts_utils.memoize_by_buf_tick(function(bufnr)
-	local filelang = ts_parsers.ft_to_lang(vim.api.nvim_buf_get_option(bufnr, 'filetype'))
+	local filelang = ts_parsers.ft_to_lang(vim.api.nvim_buf_get_option(bufnr, "filetype"))
 	local parser = ts_parsers.get_parser(bufnr, filelang)
 	return parser:parse()
 end)
@@ -236,7 +236,7 @@ end)
 -- returns the data in table format
 function M.get_data()
 	-- Inserting text cause error nodes
-	if vim.fn.mode() == 'i' then
+	if vim.api.nvim_get_mode().mode == 'i' then
 		return data_cache_value
 	end
 
@@ -250,7 +250,7 @@ function M.get_data()
 	end
 
 	-- Request treesitter parser to update the syntax tree for the current buffer.
-	update_tree(vim.fn.bufnr())
+	update_tree(vim.api.nvim_get_current_buf())
 
 	local current_node = ts_utils.get_node_at_cursor()
 
@@ -301,7 +301,7 @@ end
 
 -- Returns the pretty statusline component
 function M.get_location(opts)
-	if vim.fn.mode() == 'i' then
+	if vim.api.nvim_get_mode().mode == 'i' then
 		return location_cache_value
 	end
 
