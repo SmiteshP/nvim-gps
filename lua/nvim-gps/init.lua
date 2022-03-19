@@ -15,18 +15,6 @@ local default_config = {
 		["container-name"] = 'ﮅ ',
 		["tag-name"] = '炙'
 	},
-	languages = {
-		["yang"] = {
-			icons = {
-				["container-name"] = "X",
-				["grouping-name"] = "X",
-				["typedef-name"] = "X",
-				["list-name"] = "X",
-				["leaf-list-name"] = "X",
-				["leaf-name"] = "X",
-			}
-		}
-	},
 	separator = ' > ',
 	depth = 0,
 	depth_limit_indicator = ".."
@@ -92,6 +80,20 @@ local function setup_language_configs()
 				["integer-name"] = '# ',
 				["float-name"] = ' ',
 				["string-name"] = ' '
+			}
+		}),
+		["yang"] = with_default_config({
+			icons = {
+				["module-name"] = " ",
+				["augment-path"] = " ",
+				["container-name"] = " ",
+				["grouping-name"] = " ",
+				["typedef-name"] = " ",
+				["identity-name"] = " ",
+				["list-name"] = "﬘ ",
+				["leaf-list-name"] = " ",
+				["leaf-name"] = " ",
+				["action-name"] = " ",
 			}
 		}),
 	}
