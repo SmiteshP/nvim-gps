@@ -278,7 +278,7 @@ function M.get_data()
 	local node_data = {}
 	local node = current_node
 
-	function add_node_data(pos, capture_name, capture_node)
+	local function add_node_data(pos, capture_name, capture_node)
 		local node_text = transform(
 			config,
 			capture_name,
