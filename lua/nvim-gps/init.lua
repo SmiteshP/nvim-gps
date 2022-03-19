@@ -82,6 +82,20 @@ local function setup_language_configs()
 				["string-name"] = ' '
 			}
 		}),
+		["yang"] = with_default_config({
+			icons = {
+				["module-name"] = " ",
+				["augment-path"] = " ",
+				["container-name"] = " ",
+				["grouping-name"] = " ",
+				["typedef-name"] = " ",
+				["identity-name"] = " ",
+				["list-name"] = "﬘ ",
+				["leaf-list-name"] = " ",
+				["leaf-name"] = " ",
+				["action-name"] = " ",
+			}
+		}),
 	}
 end
 
@@ -154,6 +168,13 @@ local transform_lang = {
 	["python"] = function(config, capture_name, capture_text)
 		if capture_name == "main-function" then
 			return default_transform(config, "function-name", "main")
+		else
+			return default_transform(config, capture_name, capture_text)
+		end
+	end,
+	["yang"] = function(config, capture_name, capture_text)
+		if capture_name == "keyword" then
+			return nil
 		else
 			return default_transform(config, capture_name, capture_text)
 		end
@@ -257,6 +278,18 @@ function M.get_data()
 	local node_data = {}
 	local node = current_node
 
+	function add_node_data(pos, capture_name, capture_node)
+		local node_text = transform(
+			config,
+			capture_name,
+			table.concat(ts_utils.get_node_text(capture_node), ' ')
+		)
+
+		if node_text ~= nil then
+			table.insert(node_data, pos, node_text)
+		end
+	end
+
 	while node do
 		local iter = gps_query:iter_captures(node, 0)
 		local capture_ID, capture_node = iter()
@@ -268,17 +301,17 @@ function M.get_data()
 					capture_ID, capture_node = iter()
 				end
 				local capture_name = gps_query.captures[capture_ID]
-				table.insert(node_data, 1, transform(config, capture_name, table.concat(ts_utils.get_node_text(capture_node), ' ')))
+				add_node_data(1, capture_name, capture_node)
 
 			elseif gps_query.captures[capture_ID] == "scope-root-2" then
 
 				capture_ID, capture_node = iter()
 				local capture_name = gps_query.captures[capture_ID]
-				table.insert(node_data, 1, transform(config, capture_name, table.concat(ts_utils.get_node_text(capture_node), ' ')))
+				add_node_data(1, capture_name, capture_node)
 
 				capture_ID, capture_node = iter()
 				capture_name = gps_query.captures[capture_ID]
-				table.insert(node_data, 2, transform(config, capture_name, table.concat(ts_utils.get_node_text(capture_node), ' ')))
+				add_node_data(1, capture_name, capture_node)
 
 			end
 		end
