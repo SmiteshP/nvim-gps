@@ -37,6 +37,7 @@ Here is a example of how it can look in a fully configured statusline
 * Typescript (and tsx)
 * Verilog
 * YAML
+* YANG
 
 ## ⚡️ Requirements
 
@@ -138,6 +139,20 @@ require("nvim-gps").setup({
 				["integer-name"] = '# ',
 				["float-name"] = ' ',
 				["string-name"] = ' '
+			}
+		},
+		["yang"] = {
+			icons = {
+				["module-name"] = " ",
+				["augment-path"] = " ",
+				["container-name"] = " ",
+				["grouping-name"] = " ",
+				["typedef-name"] = " ",
+				["identity-name"] = " ",
+				["list-name"] = "﬘ ",
+				["leaf-list-name"] = " ",
+				["leaf-name"] = " ",
+				["action-name"] = " ",
 			}
 		},
 
