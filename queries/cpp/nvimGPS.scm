@@ -1,12 +1,12 @@
 
 ; Class
 ((class_specifier
-	name: (type_identifier) @class-name
+	name: [(type_identifier) (qualified_identifier)] @class-name
 	body: (field_declaration_list)) @scope-root)
 
 ; Struct
 ((struct_specifier
-	name: (type_identifier) @class-name
+	name: [(type_identifier) (qualified_identifier)] @class-name
 	body: (field_declaration_list)) @scope-root)
 
 ; Namespace
@@ -17,32 +17,23 @@
 ; Function
 ((function_definition
 	declarator: (function_declarator
-		declarator: (_) @function-name)) @scope-root)
+		declarator: [(identifier) @function-name (qualified_identifier) @multi-class-method (field_identifier) @method-name])) @scope-root)
 
 ; Function with pointer as return type
 ((function_definition
 	declarator: (pointer_declarator
 		declarator: (function_declarator
-			declarator: (_) @function-name))) @scope-root)
+			declarator: [(identifier) @function-name (qualified_identifier) @multi-class-method (field_identifier) @method-name] ))) @scope-root)
 
 ; Function with reference as return type
 ((function_definition
 	declarator: (reference_declarator
 		(function_declarator
-			declarator: (_) @function-name))) @scope-root)
+			declarator: [(identifier) @function-name (qualified_identifier) @multi-class-method (field_identifier) @method-name]))) @scope-root)
 
 ; Lambda function
 ((declaration
 	declarator: (init_declarator
 		declarator: (identifier) @function-name
 		value: (lambda_expression))) @scope-root)
-
-; Method
-((function_definition
-	declarator: (function_declarator
-		declarator: (field_identifier) @method-name)) @scope-root)
-
-((function_definition
-	declarator: (function_declarator
-		declarator: (qualified_identifier) @multi-class-method)) @scope-root)
 
