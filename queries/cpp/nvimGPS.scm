@@ -17,13 +17,19 @@
 ; Function
 ((function_definition
 	declarator: (function_declarator
-		declarator: (identifier) @function-name)) @scope-root)
+		declarator: (_) @function-name)) @scope-root)
 
 ; Function with pointer as return type
 ((function_definition
 	declarator: (pointer_declarator
 		declarator: (function_declarator
-			(identifier) @function-name))) @scope-root)
+			declarator: (_) @function-name))) @scope-root)
+
+; Function with reference as return type
+((function_definition
+	declarator: (reference_declarator
+		(function_declarator
+			declarator: (_) @function-name))) @scope-root)
 
 ; Lambda function
 ((declaration
