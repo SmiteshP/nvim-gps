@@ -39,6 +39,7 @@ Here is a example of how it can look in a fully configured statusline
 * Verilog
 * YAML
 * YANG
+* Zig
 
 ## ⚡️ Requirements
 
