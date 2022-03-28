@@ -29,6 +29,7 @@ Here is a example of how it can look in a fully configured statusline
 * Javascript (and jsx)
 * JSON
 * Lua
+* Norg
 * Ocaml
 * Php
 * Python
