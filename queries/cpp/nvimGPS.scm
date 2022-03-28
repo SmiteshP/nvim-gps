@@ -17,13 +17,13 @@
 ; Function
 ((function_definition
 	declarator: (function_declarator
-		declarator: [(identifier) @function-name (qualified_identifier) @multi-class-method (field_identifier) @method-name])) @scope-root)
+		declarator: (identifier) @function-name)) @scope-root)
 
 ; Function with pointer as return type
 ((function_definition
 	declarator: (pointer_declarator
 		declarator: (function_declarator
-			declarator: [(identifier) @function-name (qualified_identifier) @multi-class-method (field_identifier) @method-name] ))) @scope-root)
+			declarator: (identifier) @function-name))) @scope-root)
 
 ; Function with reference as return type
 ((function_definition
@@ -37,3 +37,19 @@
 		declarator: (identifier) @function-name
 		value: (lambda_expression))) @scope-root)
 
+; Methods
+((function_definition
+	declarator: (function_declarator
+		declarator: [(field_identifier) @method-name (qualified_identifier) @multi-class-method])) @scope-root)
+
+; Methods with pointer as return type
+((function_definition
+	declarator: (pointer_declarator
+		declarator: (function_declarator
+			declarator: [(field_identifier) @method-name (qualified_identifier) @multi-class-method]))) @scope-root)
+
+; Methods with reference as return type
+((function_definition
+	declarator: (reference_declarator
+		(function_declarator
+			declarator: [(field_identifier) @method-name (qualified_identifier) @multi-class-method]))) @scope-root)
