@@ -122,6 +122,15 @@ local transform_lang = {
 			end
 			table.insert(ret, default_transform(config, "method-name", string.match(temp[#temp], "%s*(~?%s*[%w_]*)%s*")))
 			return ret
+		elseif capture_name == "multi-class-class" then
+			local temp = vim.split(capture_text, "%:%:")
+			local ret = {}
+			for i = 1, #temp-1  do
+				local text = string.match(temp[i], "%s*([%w_]*)%s*<?.*>?%s*")
+				table.insert(ret, default_transform(config, "class-name", text))
+			end
+			table.insert(ret, default_transform(config, "class-name", string.match(temp[#temp], "%s*([%w_]*)%s*<?.*>?%s*")))
+			return ret
 		else
 			return default_transform(config, capture_name, capture_text)
 		end

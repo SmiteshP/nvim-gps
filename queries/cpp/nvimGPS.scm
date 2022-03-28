@@ -1,12 +1,12 @@
 
 ; Class
 ((class_specifier
-	name: [(type_identifier) (qualified_identifier)] @class-name
+	name: [(type_identifier) @class-name (qualified_identifier) @multi-class-class]
 	body: (field_declaration_list)) @scope-root)
 
 ; Struct
 ((struct_specifier
-	name: [(type_identifier) (qualified_identifier)] @class-name
+	name: [(type_identifier) @class-name (qualified_identifier) @multi-class-class]
 	body: (field_declaration_list)) @scope-root)
 
 ; Namespace
