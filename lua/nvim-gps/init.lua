@@ -58,6 +58,11 @@ local function setup_language_configs()
 				["label-name"] = " ",
 			},
 		}),
+		["norg"] = with_default_config({
+			icons = {
+				["title-name"] = " ",
+			},
+		}),
 		["toml"] = with_default_config({
 			icons = {
 				["table-name"] = ' ',

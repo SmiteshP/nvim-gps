@@ -30,6 +30,7 @@ Here is a example of how it can look in a fully configured statusline
 * JSON
 * LaTeX
 * Lua
+* Norg
 * Ocaml
 * Php
 * Python
