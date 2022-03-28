@@ -28,6 +28,7 @@ Here is a example of how it can look in a fully configured statusline
 * Java
 * Javascript (and jsx)
 * JSON
+* LaTeX
 * Lua
 * Ocaml
 * Php

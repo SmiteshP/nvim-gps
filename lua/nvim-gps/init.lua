@@ -52,6 +52,12 @@ local function setup_language_configs()
 				["string-name"] = ' '
 			}
 		}),
+		["latex"] = with_default_config({
+			icons = {
+				["title-name"] = "# ",
+				["label-name"] = " ",
+			},
+		}),
 		["toml"] = with_default_config({
 			icons = {
 				["table-name"] = ' ',
