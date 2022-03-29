@@ -115,6 +115,17 @@ require("nvim-gps").setup({
 				["string-name"] = ' '
 			}
 		},
+		["latex"] = {
+			icons = {
+				["title-name"] = "# ",
+				["label-name"] = " ",
+			},
+		},
+		["norg"] = {
+			icons = {
+				["title-name"] = " ",
+			},
+		},
 		["toml"] = {
 			icons = {
 				["table-name"] = ' ',
