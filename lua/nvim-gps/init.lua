@@ -112,6 +112,8 @@ end
 
 local data_cache_value = ""
 local location_cache_value = ""
+local data_prev_loc = {0, 0}
+local location_prev_loc = {0, 0}
 local setup_complete = false
 
 local function default_transform(config, capture_name, capture_text)
@@ -281,6 +283,14 @@ function M.get_data()
 		return data_cache_value
 	end
 
+	-- Avoid repeated calls on same cursor position
+	local curr_loc = vim.api.nvim_win_get_cursor(0)
+	if data_prev_loc[1] == curr_loc[1] and data_prev_loc[2] == curr_loc[2] then
+		return data_cache_value
+	end
+
+	data_prev_loc = vim.api.nvim_win_get_cursor(0)
+
 	local filelang = ts_parsers.ft_to_lang(vim.bo.filetype)
 	local gps_query = ts_queries.get_query(filelang, "nvimGPS")
 	local transform = transform_lang[filelang]
@@ -357,6 +367,13 @@ function M.get_location(opts)
 	if vim.api.nvim_get_mode().mode == 'i' then
 		return location_cache_value
 	end
+
+	local curr_loc = vim.api.nvim_win_get_cursor(0)
+	if location_prev_loc[1] == curr_loc[1] and location_prev_loc[2] == curr_loc[2] then
+		return location_cache_value
+	end
+
+	location_prev_loc = vim.api.nvim_win_get_cursor(0)
 
 	local filelang = ts_parsers.ft_to_lang(vim.bo.filetype)
 	local config = configs[filelang]
