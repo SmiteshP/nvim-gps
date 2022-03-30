@@ -14,7 +14,11 @@ local default_config = {
 		["method-name"] = ' ',
 		["container-name"] = 'ﮅ ',
 		["tag-name"] = '炙',
-		["hook-name"] = 'ﯠ '
+		["hook-name"] = 'ﯠ ',
+		["scss-name"] = '',
+		["scss-mixin-name"] = '@mixin ',
+		["scss-include-name"] = '@include ',
+		["scss-keyframes-name"] = '@keyframes '
 	},
 	separator = ' > ',
 	depth = 0,
