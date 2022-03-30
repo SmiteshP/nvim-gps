@@ -22,3 +22,11 @@
 	open_tag: (jsx_opening_element
     name: (nested_identifier) @tag-name
   )) @scope-root)
+
+((jsx_self_closing_element
+    name: (identifier) @tag-name
+  ) @scope-root)
+
+((jsx_self_closing_element
+    name: (nested_identifier) @tag-name
+  ) @scope-root)
