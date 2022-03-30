@@ -13,7 +13,8 @@ local default_config = {
 		["function-name"] = ' ',
 		["method-name"] = ' ',
 		["container-name"] = 'ﮅ ',
-		["tag-name"] = '炙'
+		["tag-name"] = '炙',
+		["hook-name"] = 'ﯠ '
 	},
 	separator = ' > ',
 	depth = 0,
