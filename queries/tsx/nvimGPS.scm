@@ -11,3 +11,14 @@
   value: (call_expression
     function: (identifier) @hook-identifier (#match? @hook-identifier "^use")
   )) @scope-root)
+
+; JSX
+((jsx_element
+	open_tag: (jsx_opening_element
+    name: (identifier) @tag-name
+  )) @scope-root)
+
+((jsx_element
+	open_tag: (jsx_opening_element
+    name: (nested_identifier) @tag-name
+  )) @scope-root)
