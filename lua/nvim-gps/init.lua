@@ -107,7 +107,7 @@ local function setup_language_configs()
 				["action-name"] = " ",
 			}
 		}),
-		["sass"] = with_default_config({
+		["scss"] = with_default_config({
 			icons = {
         ["scss-name"] = "",
         ["scss-mixin-name"] = "@mixin ",
