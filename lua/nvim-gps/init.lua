@@ -14,11 +14,6 @@ local default_config = {
 		["method-name"] = ' ',
 		["container-name"] = 'ﮅ ',
 		["tag-name"] = '炙',
-		["hook-name"] = 'ﯠ ',
-		["scss-name"] = '',
-		["scss-mixin-name"] = '@mixin ',
-		["scss-include-name"] = '@include ',
-		["scss-keyframes-name"] = '@keyframes '
 	},
 	separator = ' > ',
 	depth = 0,
@@ -110,6 +105,19 @@ local function setup_language_configs()
 				["leaf-list-name"] = " ",
 				["leaf-name"] = " ",
 				["action-name"] = " ",
+			}
+		}),
+		["sass"] = with_default_config({
+			icons = {
+        ["scss-name"] = "",
+        ["scss-mixin-name"] = "@mixin ",
+        ["scss-include-name"] = "@include ",
+        ["scss-keyframes-name"] = "@keyframes ",
+			}
+		}),
+		["tsx"] = with_default_config({
+			icons = {
+        ["hook-name"] = "ﯠ ",
 			}
 		}),
 	}
