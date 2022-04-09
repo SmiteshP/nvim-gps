@@ -13,7 +13,7 @@ local default_config = {
 		["function-name"] = ' ',
 		["method-name"] = ' ',
 		["container-name"] = 'ﮅ ',
-		["tag-name"] = '炙'
+		["tag-name"] = '炙',
 	},
 	separator = ' > ',
 	depth = 0,
@@ -105,6 +105,19 @@ local function setup_language_configs()
 				["leaf-list-name"] = " ",
 				["leaf-name"] = " ",
 				["action-name"] = " ",
+			}
+		}),
+		["scss"] = with_default_config({
+			icons = {
+        ["scss-name"] = "",
+        ["scss-mixin-name"] = "@mixin ",
+        ["scss-include-name"] = "@include ",
+        ["scss-keyframes-name"] = "@keyframes ",
+			}
+		}),
+		["tsx"] = with_default_config({
+			icons = {
+        ["hook-name"] = "ﯠ ",
 			}
 		}),
 	}
