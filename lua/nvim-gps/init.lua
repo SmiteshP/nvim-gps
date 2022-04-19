@@ -109,15 +109,15 @@ local function setup_language_configs()
 		}),
 		["scss"] = with_default_config({
 			icons = {
-        ["scss-name"] = "",
-        ["scss-mixin-name"] = "@mixin ",
-        ["scss-include-name"] = "@include ",
-        ["scss-keyframes-name"] = "@keyframes ",
+				["scss-name"] = "",
+				["scss-mixin-name"] = "@mixin ",
+				["scss-include-name"] = "@include ",
+				["scss-keyframes-name"] = "@keyframes ",
 			}
 		}),
 		["tsx"] = with_default_config({
 			icons = {
-        ["hook-name"] = "ﯠ ",
+				["hook-name"] = "ﯠ ",
 			}
 		}),
 	}
@@ -322,10 +322,13 @@ function M.get_data()
 	local node = current_node
 
 	local function add_node_data(pos, capture_name, capture_node)
+		local text = vim.treesitter.query.get_node_text(capture_node, 0)
+		text = string.gsub(text, "%s+", ' ')
+
 		local node_text = transform(
 			config,
 			capture_name,
-			table.concat(ts_utils.get_node_text(capture_node), ' ')
+			text
 		)
 
 		if node_text ~= nil then
