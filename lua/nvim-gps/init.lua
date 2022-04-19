@@ -1,6 +1,7 @@
 local ts_utils = require("nvim-treesitter.ts_utils")
 local ts_parsers = require("nvim-treesitter.parsers")
 local ts_queries = require("nvim-treesitter.query")
+local utils = require("nvim-gps.utils")
 
 local M = {}
 
@@ -322,8 +323,15 @@ function M.get_data()
 	local node = current_node
 
 	local function add_node_data(pos, capture_name, capture_node)
-		local text = vim.treesitter.query.get_node_text(capture_node, 0)
-		text = string.gsub(text, "%s+", ' ')
+		local text = ""
+
+		if vim.fn.has("nvim-0.7") then
+			text = vim.treesitter.query.get_node_text(capture_node, 0)
+			text = string.gsub(text, "%s+", ' ')
+		else
+			text = utils.get_node_text()
+			text = table.concat(text, ' ')
+		end
 
 		local node_text = transform(
 			config,
