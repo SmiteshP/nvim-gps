@@ -365,7 +365,7 @@ function M.get_data()
 
 				capture_ID, capture_node = iter()
 				capture_name = gps_query.captures[capture_ID]
-				add_node_data(1, capture_name, capture_node)
+				add_node_data(2, capture_name, capture_node)
 
 			end
 		end
