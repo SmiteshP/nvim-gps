@@ -197,7 +197,7 @@ require("nvim-gps").setup({
 	depth = 0,
 
 	-- indicator used when context hits depth limit
-	depth_limit_indicator = ".."
+	depth_limit_indicator = "..",
 
   -- text highlight group
   text_hl = "LineNr"
