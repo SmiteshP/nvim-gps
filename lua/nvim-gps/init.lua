@@ -19,7 +19,7 @@ local default_config = {
 	separator = ' > ',
 	depth = 0,
 	depth_limit_indicator = "..",
-  text_hl = "Normal"
+	text_hl = "Normal"
 }
 
 -- Languages specific default configuration must be added to configs
