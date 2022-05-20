@@ -18,7 +18,8 @@ local default_config = {
 	},
 	separator = ' > ',
 	depth = 0,
-	depth_limit_indicator = ".."
+	depth_limit_indicator = "..",
+  text_hl = "Normal"
 }
 
 -- Languages specific default configuration must be added to configs
@@ -132,8 +133,8 @@ local setup_complete = false
 
 local function default_transform(config, capture_name, capture_text)
 	return {
-		text = capture_text,
-		type = capture_name,
+		text = "%#" .. default_config.text_hl .. "#" .. capture_text .. "%*",
+		type = "%#" .. default_config.text_hl .. "#" .. capture_name .. "%*",
 		icon = config.icons[capture_name]
 	}
 end
@@ -252,6 +253,7 @@ function M.setup(user_config)
 	user_config = user_config or {}
 	default_config.separator = user_config.separator or default_config.separator
 	default_config.disable_icons = user_config.disable_icons or default_config.disable_icons
+	default_config.text_hl = user_config.text_hl or default_config.text_hl
 	default_config.icons = vim.tbl_extend("force", default_config.icons, user_config["icons"] or {})
 	setup_language_configs()
 	default_config.depth = user_config.depth or default_config.depth
@@ -436,3 +438,4 @@ function M.get_location(opts)
 end
 
 return M
+
