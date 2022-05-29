@@ -124,8 +124,8 @@ local function setup_language_configs()
 	}
 end
 
-local data_cache_value = ""
-local location_cache_value = ""
+local data_cache_value = nil  -- table
+local location_cache_value = ""  -- string
 local data_prev_loc = {0, 0}
 local location_prev_loc = {0, 0}
 local setup_complete = false
@@ -290,7 +290,7 @@ local update_tree = ts_utils.memoize_by_buf_tick(function(bufnr)
 	return parser:parse()
 end)
 
--- returns the data in table format
+---@return table|nil  the data in table format, or nil if gps is not available
 function M.get_data()
 	-- Inserting text cause error nodes
 	if vim.api.nvim_get_mode().mode == 'i' then
@@ -311,7 +311,7 @@ function M.get_data()
 	local config = configs[filelang]
 
 	if not gps_query then
-		return "error"
+		return nil
 	end
 
 	-- Request treesitter parser to update the syntax tree for the current buffer.
@@ -325,7 +325,7 @@ function M.get_data()
 	local function add_node_data(pos, capture_name, capture_node)
 		local text = ""
 
-		if vim.fn.has("nvim-0.7") then
+		if vim.fn.has("nvim-0.7") > 0 then
 			text = vim.treesitter.query.get_node_text(capture_node, 0)
 			if text == nil then
 				return data_cache_value
@@ -389,7 +389,7 @@ function M.get_data()
 	return data_cache_value
 end
 
--- Returns the pretty statusline component
+---@return string|nil  the pretty statusline component, or nil if not available
 function M.get_location(opts)
 	if vim.api.nvim_get_mode().mode == 'i' then
 		return location_cache_value
@@ -405,6 +405,10 @@ function M.get_location(opts)
 	local filelang = ts_parsers.ft_to_lang(vim.bo.filetype)
 	local config = configs[filelang]
 	local data = M.get_data()
+
+	if not data then
+		return nil
+	end
 
 	local depth = config.depth
 	local separator = config.separator

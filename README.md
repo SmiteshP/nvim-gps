@@ -210,11 +210,14 @@ nvim-gps doesn't modify your statusline by itself, instead you are provided with
 local gps = require("nvim-gps")
 
 gps.is_available()  -- Returns boolean value indicating whether a output can be provided
-gps.get_location()  -- Returns a string with context information
+gps.get_location()  -- Returns a string with context information (or nil if not available)
+
+-- example output: "mystruct > sum"
 ```
 
+
 <details>
-<summary> You can also pass optional arguments to <code>get_location</code> function to override options given in setup function </summary>
+<summary> You can also pass optional arguments to <code>get_location</code> function to override options given in setup function: </summary>
 
 ```lua
 opts = {
@@ -229,15 +232,15 @@ gps.get_location(opts)
 
 </details>
 
-These two functions should satisfy the needs of most users, however if you want the raw intermediate data for custom usage you can use the following function
+These two functions should satisfy the needs of most users, however if you want the raw intermediate data for custom usage you can use the following function:
 
 ```lua
-gps.get_data()      -- Returns an intermediate representation of data (which is used by get_location)
-					-- Table of tables that contain 'text', 'type' and 'icon' for each context
+gps.get_data()      -- Returns a table of intermediate representation of data (which is used by get_location)
+                    -- Table of tables that contain 'text', 'type' and 'icon' for each context
 ```
 
 <details>
-<summary> example output of <code>get_data</code> function </summary>
+<summary>An example output of <code>get_data</code> function: </summary>
 
 ```lua
  {
@@ -256,12 +259,14 @@ gps.get_data()      -- Returns an intermediate representation of data (which is 
 
 </details>
 
-Few examples below
+
+
+## Examples of Integrating with Other Plugins
 
 ### [feline](https://github.com/famiu/feline.nvim)
 
 <details>
-<summary> example feline setup </summary>
+<summary>An example feline setup </summary>
 
 ```lua
 -- Lua
@@ -282,7 +287,7 @@ table.insert(components.active[1], {
 ### [galaxyline](https://github.com/glepnir/galaxyline.nvim)
 
 <details>
-<summary> example galaxyline setup </summary>
+<summary>An example galaxyline setup </summary>
 
 ```lua
 -- Lua
@@ -305,7 +310,7 @@ require('galaxyline').section.left[1]= {
 ### [lualine](https://github.com/hoob3rt/lualine.nvim)
 
 <details>
-<summary> example lualine setup </summary>
+<summary>An example lualine setup </summary>
 
 ```lua
 -- Lua
