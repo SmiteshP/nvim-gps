@@ -8,11 +8,15 @@
 
 ; Operator Definition
 ((signature
-  name: (operator) @function-name) @scope-root)
+  name: (operator) @operator-name) @scope-root)
 
 ; Operator 
 ((function
-   infix: (infix op: (varop) @function-name)) @scope-root)
+   infix: (infix op: (varop) @operator-name)) @scope-root)
+
+; Operator in Where Clause
+((function
+   name: (operator) @operator-name) @scope-root)
 
 ; Data 
 ((adt 
