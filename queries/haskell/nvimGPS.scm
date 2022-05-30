@@ -18,6 +18,14 @@
 ((adt 
    name: (type) @class-name) @scope-root)
 
+; Constructors
+((data_constructor
+   (constructor) @method-name) @scope-root)
+
+; Record Field
+((field 
+   (variable) @method-name) @scope-root)
+
 ; Newtype
 ((newtype
    name: (type) @class-name) @scope-root)
