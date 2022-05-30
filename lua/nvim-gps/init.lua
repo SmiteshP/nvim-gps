@@ -183,7 +183,7 @@ local transform_lang = {
 			if capture_name == "operator-name" then
 				return default_transform(config, "function-name", ("(" .. capture_text .. ")" ))
 			else
-				return default_transform(config, "function-name", capture_text)
+				return default_transform(config, capture_name, capture_text)
 			end
 	end,
 
