@@ -31,6 +31,7 @@ Here is a example of how it can look in a fully configured statusline
 * LaTeX
 * Lua
 * Norg
+* Nix
 * Ocaml
 * Php
 * Python
