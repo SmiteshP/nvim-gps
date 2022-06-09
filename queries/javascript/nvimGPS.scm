@@ -36,3 +36,39 @@
 ((field_definition
 	property: (property_identifier) @method-name
 	value: (arrow_function)) @scope-root)
+
+; object literal
+((variable_declarator
+	name: (identifier) @object-name
+	value: (object)) @scope-root)
+
+; object literal modification
+((assignment_expression
+	left: (identifier) @object-name
+	right: (object)) @scope-root)
+
+; nested objects
+((pair
+  key: (property_identifier) @object-name
+  value: (_)) @scope-root)
+
+; nested objects with computed_property_name e.g. { [bar] : true }
+((pair
+  key: (computed_property_name) @object-name
+  value: (_)) @scope-root)
+
+; object property modification
+((assignment_expression
+	left: (member_expression) @object-name
+	right: (object)) @scope-root)
+
+; array
+((variable_declarator
+	name: (identifier) @array-name
+	value: (array)) @scope-root)
+
+; array modification
+((assignment_expression
+	left: (identifier) @array-name
+	right: (array)) @scope-root)
+
