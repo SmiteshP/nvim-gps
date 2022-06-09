@@ -24,6 +24,7 @@ Here is a example of how it can look in a fully configured statusline
 * C#
 * Fennel
 * Go
+* Haskell
 * Html
 * Java
 * Javascript (and jsx)

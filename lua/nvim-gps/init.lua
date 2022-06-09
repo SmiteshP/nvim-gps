@@ -179,6 +179,14 @@ local transform_lang = {
 			return default_transform(config, "tag-name", ret)
 		end
 	end,
+	["haskell"] = function(config, capture_name, capture_text)
+			if capture_name == "operator-name" then
+				return default_transform(config, "function-name", ("(" .. capture_text .. ")" ))
+			else
+				return default_transform(config, capture_name, capture_text)
+			end
+	end,
+
 	["lua"] = function(config, capture_name, capture_text)
 		if capture_name == "string-method" then
 			return default_transform(config, "method-name", string.match(capture_text, "[\"\'](.*)[\"\']"))
