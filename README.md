@@ -1,3 +1,7 @@
+## 🆕 Consider using [nvim-navic](https://github.com/SmiteshP/nvim-navic) over this
+
+nvim-navic is an improved version of nvim-gps (a version 2.0!). It accompishes the same task as this plugin, but uses LSP instead of Treesitter.
+
 # 🛰️ nvim-gps
 
 Take this handy dandy gps with you on your coding adventures and always know where you are!
