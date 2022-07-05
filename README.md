@@ -1,6 +1,6 @@
-## 🆕 Consider using [nvim-navic](https://github.com/SmiteshP/nvim-navic) over this
+# ⚠️ Deprecated! Use [nvim-navic](https://github.com/SmiteshP/nvim-navic) instead of this plugin
 
-nvim-navic is an improved version of nvim-gps (a version 2.0!). It accompishes the same task as this plugin, but uses LSP instead of Treesitter.
+nvim-navic is an improved version of nvim-gps (a version 2.0!). It accompishes the same task as this plugin, but uses LSP instead of Treesitter. It also adds ability to have coloured icons!
 
 # 🛰️ nvim-gps
 
